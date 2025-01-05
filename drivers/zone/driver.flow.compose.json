@@ -16,6 +16,9 @@
         {
           "type": "number",
           "name": "temperature",
+          "title": {
+            "en": "Temperature"
+          },
           "placeholder": {
             "en": "Temperature"
           },
@@ -26,6 +29,9 @@
         {
           "type": "number",
           "name": "durationInHours",
+          "title": {
+            "en": "Hours"
+          },
           "placeholder": {
             "en": "Hours"
           },
@@ -46,6 +52,5 @@
     }
   ],
   "triggers": [
-
   ]
 }
