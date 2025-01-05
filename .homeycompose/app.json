@@ -4,6 +4,8 @@
   "compatibility": ">=12.2.0",
   "sdk": 3,
   "brandColor": "#00917E",
+  "support": "mailto:info@factory76.nl",
+  "source": "https://github.com/PallieterVerhoeven/Homey-Vaillant-app",
   "platforms": [
     "local"
   ],
