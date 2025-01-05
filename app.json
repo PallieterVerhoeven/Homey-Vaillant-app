@@ -8,10 +8,10 @@
     "local"
   ],
   "name": {
-    "en": "Vaillant Heat Pump"
+    "en": "myVaillant"
   },
   "description": {
-    "en": "Control heat pump"
+    "en": "Control vaillant heat pumps, boilers and heating zones."
   },
   "category": [
     "climate"

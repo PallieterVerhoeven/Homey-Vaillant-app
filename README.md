@@ -1,4 +1,4 @@
-# Vaillant Heat Pump
+# myVaillant
 Homey app that interacts with the myVaillant api that is normally used by the mobile app. 
 In theory all app features could be supported. But not all features are implemented, please add an issue or PR when features are missing for your use case.
 
