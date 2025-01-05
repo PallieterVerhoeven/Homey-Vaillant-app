@@ -4,5 +4,8 @@
   },
   "1.0.2": {
     "en": "Remove unused 'hot_water_mode' capability"
+  },
+  "1.0.3": {
+    "en": "Fix app icon"
   }
 }
