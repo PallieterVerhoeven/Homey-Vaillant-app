@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "compatibility": ">=12.2.0",
   "sdk": 3,
+  "brandColor": "#00917E",
   "platforms": [
     "local"
   ],
@@ -11,7 +12,7 @@
     "en": "myVaillant"
   },
   "description": {
-    "en": "Control vaillant heat pumps, boilers and heating zones."
+    "en": "Control vaillant heat pumps and heating zones"
   },
   "category": [
     "climate"
