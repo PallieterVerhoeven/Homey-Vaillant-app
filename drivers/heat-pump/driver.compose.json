@@ -4,7 +4,6 @@
   },
   "class": "heatpump",
   "capabilities": [
-    "hot_water_mode",
     "measure_power",
     "alarm_tank_empty",
     "measure_temperature",
