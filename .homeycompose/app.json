@@ -1,0 +1,28 @@
+{
+  "id": "com.factory76.vaillant",
+  "version": "1.0.0",
+  "compatibility": ">=12.2.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Vaillant Heat Pump"
+  },
+  "description": {
+    "en": "Control heat pump"
+  },
+  "category": [
+    "climate"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Pallieter Verhoeven",
+    "email": "pallieter.verhoeven@gmail.com"
+  }
+}

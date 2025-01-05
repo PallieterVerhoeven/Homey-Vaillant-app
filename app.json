@@ -1,0 +1,353 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "com.factory76.vaillant",
+  "version": "1.0.0",
+  "compatibility": ">=12.2.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Vaillant Heat Pump"
+  },
+  "description": {
+    "en": "Control heat pump"
+  },
+  "category": [
+    "climate"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Pallieter Verhoeven",
+    "email": "pallieter.verhoeven@gmail.com"
+  },
+  "flow": {
+    "actions": [
+      {
+        "id": "start-hot-water-boost",
+        "title": {
+          "en": "Start hot water boost"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=heat-pump"
+          }
+        ]
+      },
+      {
+        "id": "stop-hot-water-boost",
+        "title": {
+          "en": "Stop hot water boost"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=heat-pump"
+          }
+        ]
+      },
+      {
+        "id": "set-hot-water-temperature",
+        "title": {
+          "en": "set hot water"
+        },
+        "titleFormatted": {
+          "en": "Set hot water temperature to [[temperature]]°C"
+        },
+        "hint": {
+          "en": "Set desired hot water temperature"
+        },
+        "highlight": true,
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=heat-pump"
+          },
+          {
+            "type": "number",
+            "name": "temperature",
+            "placeholder": {
+              "en": "Temperature"
+            },
+            "min": 35,
+            "max": 70,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "set-temperature-veto-for-duration",
+        "title": {
+          "en": "Set temperature for hours"
+        },
+        "titleFormatted": {
+          "en": "Set temperature to [[temperature]]°C for [[durationInHours]] hours"
+        },
+        "hint": {
+          "en": "Override room temperature for specified time"
+        },
+        "highlight": true,
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=zone"
+          },
+          {
+            "type": "number",
+            "name": "temperature",
+            "placeholder": {
+              "en": "Temperature"
+            },
+            "min": 0,
+            "max": 30,
+            "step": 0.5
+          },
+          {
+            "type": "number",
+            "name": "durationInHours",
+            "placeholder": {
+              "en": "Hours"
+            },
+            "min": 1,
+            "max": 24,
+            "step": 1
+          }
+        ]
+      },
+      {
+        "id": "cancel-temperature-veto",
+        "title": {
+          "en": "Cancel temperature veto"
+        },
+        "hint": {
+          "en": "Cancels any veto temperature"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=zone"
+          }
+        ]
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Heat Pump"
+      },
+      "class": "heatpump",
+      "capabilities": [
+        "hot_water_mode",
+        "measure_power",
+        "alarm_tank_empty",
+        "measure_temperature",
+        "average-outdoor-temperature",
+        "water-pressure",
+        "status",
+        "current-hot-water-temperature",
+        "desired-hot-water-temperature"
+      ],
+      "capabilitiesOptions": {
+        "measure_power": {
+          "approximated": true
+        }
+      },
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "images": {
+        "small": "/drivers/heat-pump/assets/images/small.png",
+        "large": "/drivers/heat-pump/assets/images/large.png",
+        "xlarge": "/drivers/heat-pump/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "login_credentials",
+          "template": "login_credentials",
+          "options": {
+            "logo": "/assets/images/vaillant-logo.png",
+            "title": {
+              "en": "Login with your myVaillant account"
+            },
+            "usernameLabel": {
+              "en": "E-mail address"
+            },
+            "usernamePlaceholder": {
+              "en": "john@doe.com"
+            },
+            "passwordLabel": {
+              "en": "Password"
+            },
+            "passwordPlaceholder": {
+              "en": "Password"
+            }
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "heat-pump"
+    },
+    {
+      "name": {
+        "en": "Zone"
+      },
+      "class": "thermostat",
+      "capabilities": [
+        "measure_temperature",
+        "target_temperature",
+        "measure_humidity"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "cloud"
+      ],
+      "images": {
+        "small": "/drivers/zone/assets/images/small.png",
+        "large": "/drivers/zone/assets/images/large.png",
+        "xlarge": "/drivers/zone/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "login_credentials",
+          "template": "login_credentials",
+          "options": {
+            "logo": "/assets/images/vaillant-logo.png",
+            "title": {
+              "en": "Login with your myVaillant account"
+            },
+            "usernameLabel": {
+              "en": "E-mail address"
+            },
+            "usernamePlaceholder": {
+              "en": "john@doe.com"
+            },
+            "passwordLabel": {
+              "en": "Password"
+            },
+            "passwordPlaceholder": {
+              "en": "Password"
+            }
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "id": "zone"
+    }
+  ],
+  "capabilities": {
+    "average-outdoor-temperature": {
+      "type": "number",
+      "title": {
+        "en": "Average outdoor temperature"
+      },
+      "icon": "/assets/temperature.svg",
+      "uiComponent": "sensor",
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "°C"
+      },
+      "min": 0,
+      "max": 50,
+      "step": 0.1
+    },
+    "current-hot-water-temperature": {
+      "type": "number",
+      "title": {
+        "en": "Current hot temperature"
+      },
+      "icon": "/assets/temperature.svg",
+      "uiComponent": "sensor",
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "°C"
+      },
+      "min": 0,
+      "max": 70,
+      "step": 0.1
+    },
+    "desired-hot-water-temperature": {
+      "type": "number",
+      "title": {
+        "en": "Desired hot temperature"
+      },
+      "icon": "/assets/temperature.svg",
+      "uiComponent": "sensor",
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "°C"
+      },
+      "min": 0,
+      "max": 70,
+      "step": 0.1
+    },
+    "status": {
+      "type": "string",
+      "title": {
+        "en": "Status"
+      },
+      "uiComponent": "sensor",
+      "insights": false,
+      "getable": true,
+      "setable": false
+    },
+    "water-pressure": {
+      "type": "number",
+      "title": {
+        "en": "Water pressure"
+      },
+      "uiComponent": "sensor",
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "Bar"
+      },
+      "min": 0,
+      "max": 10,
+      "step": 0.1
+    }
+  }
+}

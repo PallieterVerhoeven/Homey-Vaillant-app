@@ -1,0 +1,41 @@
+{
+  "actions": [
+    {
+      "id": "start-hot-water-boost",
+      "title": {
+        "en": "Start hot water boost"
+      }
+    },
+    {
+      "id": "stop-hot-water-boost",
+      "title": {
+        "en": "Stop hot water boost"
+      }
+    },
+    {
+      "id": "set-hot-water-temperature",
+      "title": {
+        "en": "set hot water"
+      },
+      "titleFormatted": {
+        "en": "Set hot water temperature to [[temperature]]°C"
+      },
+      "hint": {
+        "en": "Set desired hot water temperature"
+      },
+      "highlight": true,
+      "args": [
+        {
+          "type": "number",
+          "name": "temperature",
+          "placeholder": {
+            "en": "Temperature"
+          },
+          "min": 35,
+          "max": 70,
+          "step": 1
+        }
+      ]
+    }
+  ]
+}
