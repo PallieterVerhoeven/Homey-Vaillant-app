@@ -14,7 +14,7 @@ module.exports = class MyDevice extends Homey.Device {
     this.api = new VaillantApi();
 
     this.registerCapabilityListener('target_temperature', async (value) => {
-      await this.api.setQuickVeto(this.getData().systemId, value, 3);
+      await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, value, 3);
       await this.setCapabilityValue('target_temperature', value);
     });
 
@@ -69,7 +69,7 @@ module.exports = class MyDevice extends Homey.Device {
   async updateZone() {
     try {
       await this.updateAccessToken();
-      const zone = await this.api.getZone(this.getData().systemId, this.getData().zoneIndex);
+      const zone = await this.api.getZone(this.getData().systemId, this.getData().zoneId);
 
       await this.setCapabilityValue('measure_temperature', zone.currentRoomTemperature);
       await this.setCapabilityValue('target_temperature', zone.desiredRoomTemperature);
@@ -89,12 +89,12 @@ module.exports = class MyDevice extends Homey.Device {
 
   async setQuickVeto(temperature, durationInHours) {
     await this.updateAccessToken();
-    await this.api.setQuickVeto(this.getData().id, temperature, durationInHours);
+    await this.api.setQuickVeto(this.getData().id, this.getData().zoneId, temperature, durationInHours);
   }
 
   async cancelQuickVeto(temperature, durationInHours) {
     await this.updateAccessToken();
-    await this.api.cancelQuickVeto(this.getData().id);
+    await this.api.cancelQuickVeto(this.getData().id, this.getData().zoneId);
   }
 
 };

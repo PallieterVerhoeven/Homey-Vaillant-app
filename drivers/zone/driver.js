@@ -52,7 +52,7 @@ module.exports = class MyDriver extends Homey.Driver {
             name: zone.name,
             data: {
               id: device.id + '-' + zone.index,
-              zoneIndex: zone.index,
+              zoneId: zone.index,
               systemId: device.id,
             },
             settings: {},
