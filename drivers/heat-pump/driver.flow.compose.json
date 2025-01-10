@@ -3,25 +3,30 @@
     {
       "id": "start-hot-water-boost",
       "title": {
-        "en": "Start hot water boost"
+        "en": "Start hot water boost",
+        "nl": "Start warm water boost"
       }
     },
     {
       "id": "stop-hot-water-boost",
       "title": {
-        "en": "Stop hot water boost"
+        "en": "Stop hot water boost",
+        "nl": "Stop warm water boost"
       }
     },
     {
       "id": "set-hot-water-temperature",
       "title": {
-        "en": "set hot water"
+        "en": "set hot water",
+        "nl": "stel warm water in"
       },
       "titleFormatted": {
-        "en": "Set hot water temperature to [[temperature]]°C"
+        "en": "Set hot water temperature to [[temperature]]°C",
+        "nl": "Stel warm water in op [[temperature]]°C"
       },
       "hint": {
-        "en": "Set desired hot water temperature"
+        "en": "Set desired hot water temperature",
+        "nl": "Stel gewenste warm water temperatuur in"
       },
       "highlight": true,
       "args": [
@@ -29,10 +34,12 @@
           "type": "number",
           "name": "temperature",
           "title": {
-            "en": "Temperature"
+            "en": "Temperature",
+            "nl": "Temperatuur"
           },
           "placeholder": {
-            "en": "Temperature"
+            "en": "Temperature",
+            "nl": "Temperatuur"
           },
           "min": 35,
           "max": 70,

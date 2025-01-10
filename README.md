@@ -16,6 +16,6 @@ This Homey application leans heavy on the hard work of the following projects:
 - https://github.com/TA2k/ioBroker.vaillant
 
 # 🍺 Buy me a beer
-[Donate me a beer](https://www.ing.nl/payreq/m/?trxid=jfNd2flZzzZY45rxi5TB1ggQGcO2FFZT)
+[Buy me a beer](https://www.ing.nl/payreq/m/?trxid=jfNd2flZzzZY45rxi5TB1ggQGcO2FFZT)
 
 [![betaalverzoek.png](betaalverzoek.png)](https://www.ing.nl/payreq/m/?trxid=jfNd2flZzzZY45rxi5TB1ggQGcO2FFZT)

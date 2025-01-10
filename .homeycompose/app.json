@@ -13,7 +13,8 @@
     "en": "myVaillant"
   },
   "description": {
-    "en": "Control vaillant heat pumps and heating zones"
+    "en": "Comfort for your home",
+    "nl": "Mijn huis, mijn comfort"
   },
   "category": [
     "climate"

@@ -14,7 +14,8 @@
     "en": "myVaillant"
   },
   "description": {
-    "en": "Control vaillant heat pumps and heating zones"
+    "en": "Comfort for your home",
+    "nl": "Mijn huis, mijn comfort"
   },
   "category": [
     "climate"
@@ -34,7 +35,8 @@
       {
         "id": "start-hot-water-boost",
         "title": {
-          "en": "Start hot water boost"
+          "en": "Start hot water boost",
+          "nl": "Start warm water boost"
         },
         "args": [
           {
@@ -47,7 +49,8 @@
       {
         "id": "stop-hot-water-boost",
         "title": {
-          "en": "Stop hot water boost"
+          "en": "Stop hot water boost",
+          "nl": "Stop warm water boost"
         },
         "args": [
           {
@@ -60,13 +63,16 @@
       {
         "id": "set-hot-water-temperature",
         "title": {
-          "en": "set hot water"
+          "en": "set hot water",
+          "nl": "stel warm water in"
         },
         "titleFormatted": {
-          "en": "Set hot water temperature to [[temperature]]°C"
+          "en": "Set hot water temperature to [[temperature]]°C",
+          "nl": "Stel warm water in op [[temperature]]°C"
         },
         "hint": {
-          "en": "Set desired hot water temperature"
+          "en": "Set desired hot water temperature",
+          "nl": "Stel gewenste warm water temperatuur in"
         },
         "highlight": true,
         "args": [
@@ -79,10 +85,12 @@
             "type": "number",
             "name": "temperature",
             "title": {
-              "en": "Temperature"
+              "en": "Temperature",
+              "nl": "Temperatuur"
             },
             "placeholder": {
-              "en": "Temperature"
+              "en": "Temperature",
+              "nl": "Temperatuur"
             },
             "min": 35,
             "max": 70,
@@ -93,13 +101,16 @@
       {
         "id": "set-temperature-veto-for-duration",
         "title": {
-          "en": "Set temperature for hours"
+          "en": "Set temperature for hours",
+          "nl": "Stel temperatuur in voor uren"
         },
         "titleFormatted": {
-          "en": "Set temperature to [[temperature]]°C for [[durationInHours]] hours"
+          "en": "Set temperature to [[temperature]]°C for [[durationInHours]] hours",
+          "nl": "Stel temperatuur in op [[temperature]]°C voor [[durationInHours]] uur"
         },
         "hint": {
-          "en": "Override room temperature for specified time"
+          "en": "Override room temperature for specified time",
+          "nl": "Overschrijf kamertemperatuur voor opgegeven tijd"
         },
         "highlight": true,
         "args": [
@@ -112,10 +123,12 @@
             "type": "number",
             "name": "temperature",
             "title": {
-              "en": "Temperature"
+              "en": "Temperature",
+              "nl": "Temperatuur"
             },
             "placeholder": {
-              "en": "Temperature"
+              "en": "Temperature",
+              "nl": "Temperatuur"
             },
             "min": 0,
             "max": 30,
@@ -125,10 +138,12 @@
             "type": "number",
             "name": "durationInHours",
             "title": {
-              "en": "Hours"
+              "en": "Hours",
+              "nl": "Uren"
             },
             "placeholder": {
-              "en": "Hours"
+              "en": "Hours",
+              "nl": "Uren"
             },
             "min": 1,
             "max": 24,
@@ -139,10 +154,8 @@
       {
         "id": "cancel-temperature-veto",
         "title": {
-          "en": "Cancel temperature veto"
-        },
-        "hint": {
-          "en": "Cancels any veto temperature"
+          "en": "Cancel manual temperature",
+          "nl": "Annuleer handmatig ingestelde temperatuur"
         },
         "args": [
           {
@@ -193,19 +206,23 @@
           "options": {
             "logo": "/assets/images/vaillant-logo.png",
             "title": {
-              "en": "Login with your myVaillant account"
+              "en": "Login with your myVaillant account",
+              "nl": "Log in met je myVaillant account"
             },
             "usernameLabel": {
-              "en": "E-mail address"
+              "en": "E-mail address",
+              "nl": "E-mailadres"
             },
             "usernamePlaceholder": {
               "en": "john@doe.com"
             },
             "passwordLabel": {
-              "en": "Password"
+              "en": "Password",
+              "nl": "Wachtwoord"
             },
             "passwordPlaceholder": {
-              "en": "Password"
+              "en": "Password",
+              "nl": "Wachtwoord"
             }
           }
         },
@@ -251,19 +268,23 @@
           "options": {
             "logo": "/assets/images/vaillant-logo.png",
             "title": {
-              "en": "Login with your myVaillant account"
+              "en": "Login with your myVaillant account",
+              "nl": "Log in met je myVaillant account"
             },
             "usernameLabel": {
-              "en": "E-mail address"
+              "en": "E-mail address",
+              "nl": "E-mailadres"
             },
             "usernamePlaceholder": {
               "en": "john@doe.com"
             },
             "passwordLabel": {
-              "en": "Password"
+              "en": "Password",
+              "nl": "Wachtwoord"
             },
             "passwordPlaceholder": {
-              "en": "Password"
+              "en": "Password",
+              "nl": "Wachtwoord"
             }
           }
         },

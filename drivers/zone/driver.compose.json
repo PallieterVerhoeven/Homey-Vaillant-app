@@ -4,9 +4,9 @@
   },
   "class": "thermostat",
   "capabilities": [
-    "measure_temperature",
+    "measure_humidity",
     "target_temperature",
-    "measure_humidity"
+    "measure_temperature"
   ],
   "platforms": [
     "local"
@@ -26,19 +26,23 @@
       "options": {
         "logo": "/assets/images/vaillant-logo.png",
         "title": {
-          "en": "Login with your myVaillant account"
+          "en": "Login with your myVaillant account",
+          "nl": "Log in met je myVaillant account"
         },
         "usernameLabel": {
-          "en": "E-mail address"
+          "en": "E-mail address",
+          "nl": "E-mailadres"
         },
         "usernamePlaceholder": {
           "en": "john@doe.com"
         },
         "passwordLabel": {
-          "en": "Password"
+          "en": "Password",
+          "nl": "Wachtwoord"
         },
         "passwordPlaceholder": {
-          "en": "Password"
+          "en": "Password",
+          "nl": "Wachtwoord"
         }
       }
     },

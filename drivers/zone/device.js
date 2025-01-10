@@ -71,6 +71,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.updateAccessToken();
       const zone = await this.api.getZone(this.getData().systemId, this.getData().zoneId);
 
+      console.log(zone);
       await this.setCapabilityValue('measure_temperature', zone.currentRoomTemperature);
       await this.setCapabilityValue('target_temperature', zone.desiredRoomTemperature);
       await this.setCapabilityValue('measure_humidity', zone.currentRoomHumidity);
