@@ -6,7 +6,7 @@
   "capabilities": [
     "measure_power",
     "alarm_tank_empty",
-    "measure_temperature",
+    "current-outdoor-temperature",
     "average-outdoor-temperature",
     "water-pressure",
     "status",

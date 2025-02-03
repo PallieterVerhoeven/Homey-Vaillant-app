@@ -1,0 +1,30 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Heating mode",
+    "nl": "Verwarmingsmodus"
+  },
+  "uiComponent": "picker",
+  "getable": true,
+  "setable": true,
+  "values": [
+    {
+      "id": "OFF",
+      "title": {
+        "en": "Off"
+      }
+    },
+    {
+      "id": "MANUAL",
+      "title": {
+        "en": "Manual"
+      }
+    },
+    {
+      "id": "TIME_PROGRAM",
+      "title": {
+        "en": "Time program"
+      }
+    }
+  ]
+}

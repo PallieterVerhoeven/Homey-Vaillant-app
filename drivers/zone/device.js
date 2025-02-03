@@ -27,7 +27,8 @@ module.exports = class MyDevice extends Homey.Device {
    * onAdded is called when the user adds the device, called just after pairing.
    */
   async onAdded() {
-    this.log('MyDevice has been added');
+    this.log('Zone has been added');
+    await this.updateZone();
   }
 
   /**
@@ -43,7 +44,7 @@ module.exports = class MyDevice extends Homey.Device {
     newSettings,
     changedKeys
   }) {
-    this.log('MyDevice settings where changed');
+    this.log('Zone settings where changed');
   }
 
   /**
@@ -52,14 +53,14 @@ module.exports = class MyDevice extends Homey.Device {
    * @param {string} name The new name
    */
   async onRenamed(name) {
-    this.log('MyDevice was renamed');
+    this.log('Zone was renamed');
   }
 
   /**
    * onDeleted is called when the user deleted the device.
    */
   async onDeleted() {
-    this.log('MyDevice has been deleted');
+    this.log('Zone has been deleted');
 
     if (this.updateInterval) {
       clearInterval(this.updateInterval);

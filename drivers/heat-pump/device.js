@@ -5,11 +5,8 @@ const VaillantApi = require('../../lib/vaillant-api');
 
 module.exports = class MyDevice extends Homey.Device {
 
-  /**
-   * onInit is called when the device is initialized.
-   */
   async onInit() {
-    this.log('Heat pump has been initialized');
+    this.log('Heat-pump has been initialized');
 
     this.api = new VaillantApi();
 
@@ -37,7 +34,7 @@ module.exports = class MyDevice extends Homey.Device {
 
       await this.setCapabilityValue('status', system.status);
       await this.setCapabilityValue('water-pressure', system.waterPressure);
-      await this.setCapabilityValue('measure_temperature', system.outdoorTemperature);
+      await this.setCapabilityValue('current-outdoor-temperature', system.outdoorTemperature);
       await this.setCapabilityValue('average-outdoor-temperature', system.outdoorTemperatureAverage24h);
       await this.setCapabilityValue('current-hot-water-temperature', system.hotWaterTemperatureCurrent);
       await this.setCapabilityValue('desired-hot-water-temperature', system.hotWaterTemperatureDesired);
@@ -49,11 +46,9 @@ module.exports = class MyDevice extends Homey.Device {
     }
   }
 
-  /**
-   * onAdded is called when the user adds the device, called just after pairing.
-   */
   async onAdded() {
-    this.log('MyDevice has been added');
+    this.log('Heat-pump has been added');
+    await this.updateSystem();
   }
 
   /**
@@ -69,23 +64,16 @@ module.exports = class MyDevice extends Homey.Device {
     newSettings,
     changedKeys
   }) {
-    this.log('MyDevice settings where changed');
+    this.log('Heat-pump settings where changed');
   }
 
-  /**
-   * onRenamed is called when the user updates the device's name.
-   * This method can be used this to synchronise the name to the device.
-   * @param {string} name The new name
-   */
+
   async onRenamed(name) {
-    this.log('MyDevice was renamed');
+    this.log('Heat-pump was renamed');
   }
 
-  /**
-   * onDeleted is called when the user deleted the device.
-   */
   async onDeleted() {
-    this.log('MyDevice has been deleted');
+    this.log('Heat-pump has been deleted');
 
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
@@ -105,7 +93,10 @@ module.exports = class MyDevice extends Homey.Device {
 
   async setHotWaterTemperature(temperature) {
     await this.updateAccessToken();
-    await this.api.setHotWaterTemperature(this.getData().id, temperature);
+    await this.api.setHotWaterTemperature(this.getData().id, temperature)
+      .then(() => {
+        this.setCapabilityValue('desired-hot-water-temperature', temperature);
+      });
   }
 
 };

@@ -176,7 +176,7 @@
       "capabilities": [
         "measure_power",
         "alarm_tank_empty",
-        "measure_temperature",
+        "current-outdoor-temperature",
         "average-outdoor-temperature",
         "water-pressure",
         "status",
@@ -246,9 +246,10 @@
       },
       "class": "thermostat",
       "capabilities": [
-        "measure_temperature",
+        "measure_humidity",
         "target_temperature",
-        "measure_humidity"
+        "measure_temperature",
+        "heating-mode"
       ],
       "platforms": [
         "local"
@@ -307,7 +308,8 @@
     "average-outdoor-temperature": {
       "type": "number",
       "title": {
-        "en": "Average outdoor temperature"
+        "en": "Average outdoor temperature",
+        "nl": "Gemiddelde buitentemperatuur"
       },
       "icon": "/assets/temperature.svg",
       "uiComponent": "sensor",
@@ -324,7 +326,8 @@
     "current-hot-water-temperature": {
       "type": "number",
       "title": {
-        "en": "Current hot temperature"
+        "en": "Current tap water temperature",
+        "nl": "Huidige tapwatertemperatuur"
       },
       "icon": "/assets/temperature.svg",
       "uiComponent": "sensor",
@@ -338,10 +341,29 @@
       "max": 70,
       "step": 0.1
     },
+    "current-outdoor-temperature": {
+      "type": "number",
+      "title": {
+        "en": "Current outdoor temperature",
+        "nl": "Huidige buitentemperatuur"
+      },
+      "icon": "/assets/temperature.svg",
+      "uiComponent": "sensor",
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "°C"
+      },
+      "min": -50,
+      "max": 50,
+      "step": 0.1
+    },
     "desired-hot-water-temperature": {
       "type": "number",
       "title": {
-        "en": "Desired hot temperature"
+        "en": "Desired tap water temperature",
+        "nl": "Gewenste tapwatertemperatuur"
       },
       "icon": "/assets/temperature.svg",
       "uiComponent": "sensor",
@@ -354,6 +376,36 @@
       "min": 0,
       "max": 70,
       "step": 0.1
+    },
+    "heating-mode": {
+      "type": "enum",
+      "title": {
+        "en": "Heating mode",
+        "nl": "Verwarmingsmodus"
+      },
+      "uiComponent": "picker",
+      "getable": true,
+      "setable": true,
+      "values": [
+        {
+          "id": "OFF",
+          "title": {
+            "en": "Off"
+          }
+        },
+        {
+          "id": "MANUAL",
+          "title": {
+            "en": "Manual"
+          }
+        },
+        {
+          "id": "TIME_PROGRAM",
+          "title": {
+            "en": "Time program"
+          }
+        }
+      ]
     },
     "status": {
       "type": "string",
@@ -368,7 +420,8 @@
     "water-pressure": {
       "type": "number",
       "title": {
-        "en": "Water pressure"
+        "en": "Water pressure",
+        "nl": "Waterdruk"
       },
       "uiComponent": "sensor",
       "insights": true,

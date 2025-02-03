@@ -1,8 +1,8 @@
 {
   "type": "number",
   "title": {
-    "en": "Current tap water temperature",
-    "nl": "Huidige tapwatertemperatuur"
+    "en": "Current outdoor temperature",
+    "nl": "Huidige buitentemperatuur"
   },
   "icon": "/assets/temperature.svg",
   "uiComponent": "sensor",
@@ -12,7 +12,7 @@
   "units": {
     "en": "°C"
   },
-  "min": 0,
-  "max": 70,
+  "min": -50,
+  "max": 50,
   "step": 0.1
 }
