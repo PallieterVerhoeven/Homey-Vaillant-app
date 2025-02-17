@@ -17,6 +17,9 @@
     "en": "Comfort for your home",
     "nl": "Mijn huis, mijn comfort"
   },
+  "bugs": {
+    "url": "https://github.com/PallieterVerhoeven/Homey-Vaillant-app/issues"
+  },
   "category": [
     "climate"
   ],
@@ -29,6 +32,13 @@
   "author": {
     "name": "Pallieter Verhoeven",
     "email": "pallieter.verhoeven@gmail.com"
+  },
+  "contributing": {
+    "donate": {
+      "githubSponsors": {
+        "username": "PallieterVerhoeven"
+      }
+    }
   },
   "flow": {
     "triggers": [
@@ -48,6 +58,40 @@
       }
     ],
     "conditions": [
+      {
+        "id": "desired_hot_water_temperature",
+        "highlight": true,
+        "title": {
+          "en": "The desired hot water temperature !{{is|is not}}",
+          "nl": "De gewenste warm water temperatuur !{{is|is niet}}"
+        },
+        "titleFormatted": {
+          "en": "The desired hot water temperature is [[temperature]]°C",
+          "nl": "De gewenste warm water temperatuur is [[temperature]]°C"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=heat-pump"
+          },
+          {
+            "type": "number",
+            "name": "temperature",
+            "title": {
+              "en": "Temperature",
+              "nl": "Temperatuur"
+            },
+            "placeholder": {
+              "en": "Temperature",
+              "nl": "Temperatuur"
+            },
+            "min": 35,
+            "max": 70,
+            "step": 1
+          }
+        ]
+      },
       {
         "id": "safe_water_pressure",
         "title": {
@@ -114,7 +158,7 @@
     ],
     "actions": [
       {
-        "id": "start-hot-water-boost",
+        "id": "start_hot_water_boost",
         "title": {
           "en": "Start hot water boost",
           "nl": "Start warm water boost"
@@ -128,7 +172,7 @@
         ]
       },
       {
-        "id": "stop-hot-water-boost",
+        "id": "stop_hot_water_boost",
         "title": {
           "en": "Stop hot water boost",
           "nl": "Stop warm water boost"
@@ -142,7 +186,7 @@
         ]
       },
       {
-        "id": "set-hot-water-temperature",
+        "id": "set_hot_water_temperature",
         "title": {
           "en": "set hot water",
           "nl": "stel warm water in"
@@ -180,10 +224,10 @@
         ]
       },
       {
-        "id": "set-temperature-veto-for-duration",
+        "id": "set_temperature_veto_for_duration",
         "title": {
-          "en": "Set temperature for hours",
-          "nl": "Stel temperatuur in voor uren"
+          "en": "Set temperature for ... hours",
+          "nl": "Stel temperatuur in voor ... uren"
         },
         "titleFormatted": {
           "en": "Set temperature to [[temperature]]°C for [[durationInHours]] hours",
@@ -233,7 +277,7 @@
         ]
       },
       {
-        "id": "cancel-temperature-veto",
+        "id": "cancel_temperature_veto",
         "title": {
           "en": "Cancel manual temperature",
           "nl": "Annuleer handmatig ingestelde temperatuur"

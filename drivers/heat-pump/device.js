@@ -25,6 +25,11 @@ module.exports = class MyDevice extends Homey.Device {
       return this.getCapabilityValue('safe_water_pressure');
     });
 
+    const desiredHotWaterTemperatureCondition = this.homey.flow.getConditionCard('desired_hot_water_temperature');
+    await desiredHotWaterTemperatureCondition.registerRunListener(async (args) => {
+      return args.temperature === this.getCapabilityValue('desired_hot_water_temperature');
+    });
+
     const currenHeatingModeCondition = this.homey.flow.getConditionCard('current_heating_mode');
     await currenHeatingModeCondition.registerRunListener(async (args) => {
       // TODO: Should use enum for heatingMode

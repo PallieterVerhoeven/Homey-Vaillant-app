@@ -24,6 +24,16 @@ module.exports = class MyDevice extends Homey.Device {
       //   });
     });
 
+    const setTemperatureVetoForDurationAction = this.homey.flow.getActionCard('set_temperature_veto_for_duration');
+    setTemperatureVetoForDurationAction.registerRunListener(async (args) => {
+      await this.setQuickVeto(args.temperature, args.durationInHours);
+    });
+
+    const cancelTemperatureVetoAction = this.homey.flow.getActionCard('cancel_temperature_veto');
+    cancelTemperatureVetoAction.registerRunListener(async () => {
+      await this.cancelQuickVeto();
+    });
+
     this.updateInterval = setInterval(() => {
       this.updateZone();
     }, 60000); // 60 seconds
@@ -54,11 +64,11 @@ module.exports = class MyDevice extends Homey.Device {
   }
 
   async setQuickVeto(temperature, durationInHours) {
-    await this.api.setQuickVeto(this.getData().id, this.getData().zoneId, temperature, durationInHours);
+    await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, temperature, durationInHours);
   }
 
-  async cancelQuickVeto(temperature, durationInHours) {
-    await this.api.cancelQuickVeto(this.getData().id, this.getData().zoneId);
+  async cancelQuickVeto() {
+    await this.api.cancelQuickVeto(this.getData().systemId, this.getData().zoneId);
   }
 
   /**

@@ -6,23 +6,9 @@ const VaillantApi = require('../../lib/vaillant-api');
 
 module.exports = class MyDriver extends Homey.Driver {
 
-  /**
-   * onInit is called when the driver is initialized.
-   */
   async onInit() {
     this.log('Initialize authentication');
     this.authentication = new VaillantAuthentication(this.homey.settings);
-
-    this.log('Register actions');
-    const setTemperatureVetoForDurationAction = this.homey.flow.getActionCard('set-temperature-veto-for-duration');
-    setTemperatureVetoForDurationAction.registerRunListener(async (args) => {
-      await args.device.setQuickVeto(args.temperature, args.durationInHours);
-    });
-
-    const cancelTemperatureVetoAction = this.homey.flow.getActionCard('cancel-temperature-veto');
-    cancelTemperatureVetoAction.registerRunListener(async (args) => {
-      await args.device.cancelQuickVeto();
-    });
   }
 
   async onPair(session) {

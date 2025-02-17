@@ -14,17 +14,17 @@ module.exports = class MyDriver extends Homey.Driver {
     // this.authentication = new VaillantAuthentication(this.homey.settings);
 
     this.log('Register actions');
-    const startHotWaterBoostAction = this.homey.flow.getActionCard('start-hot-water-boost');
+    const startHotWaterBoostAction = this.homey.flow.getActionCard('start_hot_water_boost');
     startHotWaterBoostAction.registerRunListener(async (args) => {
       await args.device.setHotWaterBoost(true);
     });
 
-    const stopHotWaterBoostAction = this.homey.flow.getActionCard('stop-hot-water-boost');
+    const stopHotWaterBoostAction = this.homey.flow.getActionCard('stop_hot_water_boost');
     stopHotWaterBoostAction.registerRunListener(async (args) => {
       await args.device.setHotWaterBoost(false);
     });
 
-    const setHotWaterTemperature = this.homey.flow.getActionCard('set-hot-water-temperature');
+    const setHotWaterTemperature = this.homey.flow.getActionCard('set_hot_water_temperature');
     setHotWaterTemperature.registerRunListener(async (args) => {
       await args.device.setHotWaterTemperature(args.temperature);
     });

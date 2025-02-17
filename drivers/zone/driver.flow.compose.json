@@ -43,10 +43,10 @@
   ],
   "actions": [
     {
-      "id": "set-temperature-veto-for-duration",
+      "id": "set_temperature_veto_for_duration",
       "title": {
-        "en": "Set temperature for hours",
-        "nl": "Stel temperatuur in voor uren"
+        "en": "Set temperature for ... hours",
+        "nl": "Stel temperatuur in voor ... uren"
       },
       "titleFormatted": {
         "en": "Set temperature to [[temperature]]°C for [[durationInHours]] hours",
@@ -91,7 +91,7 @@
       ]
     },
     {
-      "id": "cancel-temperature-veto",
+      "id": "cancel_temperature_veto",
       "title": {
         "en": "Cancel manual temperature",
         "nl": "Annuleer handmatig ingestelde temperatuur"
