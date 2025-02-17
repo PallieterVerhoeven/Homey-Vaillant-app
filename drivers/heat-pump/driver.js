@@ -11,7 +11,7 @@ module.exports = class MyDriver extends Homey.Driver {
    */
   async onInit() {
     this.log('Initialize authentication');
-    this.authentication = new VaillantAuthentication(this.homey.settings);
+    // this.authentication = new VaillantAuthentication(this.homey.settings);
 
     this.log('Register actions');
     const startHotWaterBoostAction = this.homey.flow.getActionCard('start-hot-water-boost');

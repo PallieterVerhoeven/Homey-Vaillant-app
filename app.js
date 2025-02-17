@@ -1,31 +1,31 @@
 'use strict';
 
 const Homey = require('homey');
+const VaillantAuthentication = require('./lib/vaillant-authentication');
 
 module.exports = class MyApp extends Homey.App {
 
-  /**
-   * onInit is called when the app is initialized.
-   */
   async onInit() {
     this.log('MyApp has been initialized');
 
-
-    // this.updateInterval = setInterval(() => {
-    //   this.updateZone();
-    // }, 60000); // 60 seconds
-    //
-    // if (this.homey.settings.get('accessToken') && this.settings.get('accessTokenExpireAt') - 10000 < Date.now()) {
-    //   console.log('Token expired');
-    //   await this.updateAccessToken();
-    // }
+    this.authentication = new VaillantAuthentication(this.homey.settings);
+    await this.updateAccessToken();
   }
 
-  // async updateAccessToken() {
-  //   if (this.homey.settings.get('accessToken') && this.settings.get('accessTokenExpireAt') - 10000 < Date.now()) {
-  //     console.log('Token expired');
-  //     await this.renewToken('netherlands');
-  //   }
-  // }
+  async updateAccessToken() {
+    let renewIn = 300000; // 5 minutes
+
+    if (this.homey.settings.get('accessToken')) {
+      await this.authentication.renewToken('netherlands');
+      renewIn = this.homey.settings.get('accessTokenExpireAt') - Date.now() - 60000;
+      console.log('renewIn', renewIn);
+
+    }
+
+    setTimeout(() => {
+      console.log('updateAccessToken()');
+      this.updateAccessToken();
+    }, renewIn);
+  }
 
 };

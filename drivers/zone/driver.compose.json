@@ -7,7 +7,7 @@
     "measure_humidity",
     "target_temperature",
     "measure_temperature",
-    "heating-mode"
+    "heating_mode"
   ],
   "platforms": [
     "local"

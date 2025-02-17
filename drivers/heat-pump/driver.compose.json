@@ -6,12 +6,12 @@
   "capabilities": [
     "measure_power",
     "alarm_tank_empty",
-    "current-outdoor-temperature",
-    "average-outdoor-temperature",
-    "water-pressure",
+    "current_outdoor_temperature",
+    "average_outdoor_temperature",
+    "water_pressure",
     "status",
-    "current-hot-water-temperature",
-    "desired-hot-water-temperature"
+    "current_hot_water_temperature",
+    "desired_hot_water_temperature"
   ],
   "capabilitiesOptions": {
     "measure_power": {

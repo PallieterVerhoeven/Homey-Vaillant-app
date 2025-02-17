@@ -11,19 +11,22 @@
     {
       "id": "OFF",
       "title": {
-        "en": "Off"
+        "en": "Off",
+        "nl": "Uit"
       }
     },
     {
       "id": "MANUAL",
       "title": {
-        "en": "Manual"
+        "en": "Manual",
+        "nl": "Handmatig"
       }
     },
     {
       "id": "TIME_PROGRAM",
       "title": {
-        "en": "Time program"
+        "en": "Time program",
+        "nl": "Tijdprogramma"
       }
     }
   ]
