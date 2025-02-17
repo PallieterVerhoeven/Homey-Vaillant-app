@@ -33,29 +33,48 @@
   "flow": {
     "triggers": [
       {
+        "id": "water_pressure_changed",
         "title": {
-          "en": "Unsafe water pressure",
-          "nl": "Onveilige waterdruk"
+          "en": "The water pressure is changed",
+          "nl": "De waterdruk is veranderd"
         },
-        "hint": {
-          "en": "Triggers when the water pressure is too high (> 2) or too low (< 1)",
-          "nl": "Wordt geactiveerd wanneer de waterdruk te hoog (> 2) of te laag is (< 1)"
-        },
-        "id": "unsafe_water_pressure"
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=heat-pump"
+          }
+        ]
       }
     ],
     "conditions": [
       {
+        "id": "safe_water_pressure",
         "title": {
-          "en": "!{{Safe|Unsafe}} water pressure",
-          "nl": "!{{Veilige|Onveilige}} waterdruk"
+          "en": "The water pressure is !{{safe|unsafe}} ",
+          "nl": "De water druk is !{{veilig|onveilig}}"
         },
-        "id": "safe_water_pressure"
+        "hint": {
+          "en": "Triggers when the water pressure is too low (<1) or too high (>2)",
+          "nl": "Wordt geactiveerd wanneer de waterdruk te laag (<1) of te hoog is (>2)"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=heat-pump"
+          }
+        ]
       },
       {
         "id": "current_heating_mode",
         "title": {
-          "en": "Current heating mode is"
+          "en": "Current heating mode !{{is|isn't}} ...",
+          "nl": "Huidige verwarmingsmodus !{{is|is niet}} ..."
+        },
+        "titleFormatted": {
+          "en": "Current heating mode !{{is|isn't}} [[heatingMode]]",
+          "nl": "Huidige verwarmingsmodus !{{is|is niet}} [[heatingMode]]"
         },
         "args": [
           {
@@ -464,7 +483,7 @@
           }
         },
         {
-          "id": "TIME_PROGRAM",
+          "id": "TIME_CONTROLLED",
           "title": {
             "en": "Time program",
             "nl": "Tijdprogramma"

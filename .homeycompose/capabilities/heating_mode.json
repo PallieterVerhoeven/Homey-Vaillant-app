@@ -23,7 +23,7 @@
       }
     },
     {
-      "id": "TIME_PROGRAM",
+      "id": "TIME_CONTROLLED",
       "title": {
         "en": "Time program",
         "nl": "Tijdprogramma"

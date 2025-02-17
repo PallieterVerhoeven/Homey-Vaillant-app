@@ -3,7 +3,12 @@
     {
       "id": "current_heating_mode",
       "title": {
-        "en": "Current heating mode is"
+        "en": "Current heating mode !{{is|isn't}} ...",
+        "nl": "Huidige verwarmingsmodus !{{is|is niet}} ..."
+      },
+      "titleFormatted": {
+        "en": "Current heating mode !{{is|isn't}} [[heatingMode]]",
+        "nl": "Huidige verwarmingsmodus !{{is|is niet}} [[heatingMode]]"
       },
       "args": [
         {

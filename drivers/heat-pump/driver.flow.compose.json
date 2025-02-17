@@ -1,4 +1,26 @@
 {
+  "triggers": [
+    {
+      "id": "water_pressure_changed",
+      "title": {
+        "en": "The water pressure is changed",
+        "nl": "De waterdruk is veranderd"
+      }
+    }
+  ],
+  "conditions": [
+    {
+      "id": "safe_water_pressure",
+      "title": {
+        "en": "The water pressure is !{{safe|unsafe}} ",
+        "nl": "De water druk is !{{veilig|onveilig}}"
+      },
+      "hint": {
+        "en": "Triggers when the water pressure is too low (<1) or too high (>2)",
+        "nl": "Wordt geactiveerd wanneer de waterdruk te laag (<1) of te hoog is (>2)"
+      }
+    }
+  ],
   "actions": [
     {
       "id": "start-hot-water-boost",

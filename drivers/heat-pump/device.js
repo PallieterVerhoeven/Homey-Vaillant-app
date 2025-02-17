@@ -8,12 +8,22 @@ module.exports = class MyDevice extends Homey.Device {
   async onInit() {
     this.log('Heat-pump has been initialized');
 
-    this.api = new VaillantApi();
+    this.api = new VaillantApi(this.homey.settings);
 
     this.updateInterval = setInterval(() => {
       this.updateMeasurePower();
       this.updateSystem();
     }, 60000); // 60 seconds
+
+    this.registerCapabilityListener('water_pressure', async () => {
+      const waterPressureChangedTrigger = this.homey.flow.getTriggerCard('water_pressure_changed');
+      await waterPressureChangedTrigger.trigger();
+    });
+
+    const safeWaterPressureCondition = this.homey.flow.getConditionCard('safe_water_pressure');
+    await safeWaterPressureCondition.registerRunListener(async () => {
+      return this.getCapabilityValue('safe_water_pressure');
+    });
 
     const currenHeatingModeCondition = this.homey.flow.getConditionCard('current_heating_mode');
     await currenHeatingModeCondition.registerRunListener(async (args) => {
@@ -21,15 +31,10 @@ module.exports = class MyDevice extends Homey.Device {
       return args.heatingMode === this.getCapabilityValue('status');
     });
 
-    const safeWaterPressureCondition = this.homey.flow.getConditionCard('safe_water_pressure');
-    await safeWaterPressureCondition.registerRunListener(async () => {
-      return this.getCapabilityValue('safe_water_pressure');
-    });
   }
 
   async updateMeasurePower() {
     try {
-      await this.updateAccessToken();
       const energyUsage = await this.api.getEnergyUsage(this.getData().id);
 
       await this.setCapabilityValue('measure_power', energyUsage);
@@ -40,15 +45,7 @@ module.exports = class MyDevice extends Homey.Device {
 
   async updateSystem() {
     try {
-      await this.updateAccessToken();
       const system = await this.api.getSystem(this.getData().id);
-
-      if (this.getCapabilityValue('safe_water_pressure') === true
-        && system.isWaterPressureSafe() === false
-      ) {
-        const unsafeWaterPressureTrigger = this.homey.flow.getTriggerCard('unsafe_water_pressure');
-        await unsafeWaterPressureTrigger.trigger();
-      }
 
       await this.setCapabilityValue('status', system.status);
       await this.setCapabilityValue('water_pressure', system.waterPressure);
@@ -57,7 +54,6 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setCapabilityValue('current_hot_water_temperature', system.hotWaterTemperatureCurrent);
       await this.setCapabilityValue('desired_hot_water_temperature', system.hotWaterTemperatureDesired);
       await this.setCapabilityValue('alarm_tank_empty', system.hotWaterTemperatureCurrent < 38);
-      await this.setCapabilityValue('safe_water_pressure', system.isWaterPressureSafe());
 
       console.log('System updated');
     } catch (err) {
@@ -78,19 +74,11 @@ module.exports = class MyDevice extends Homey.Device {
     }
   }
 
-  async updateAccessToken() {
-    this.api.setAccessToken(
-      await this.driver.authentication.getAccessToken(this.getData().country)
-    );
-  }
-
   async setHotWaterBoost(state) {
-    await this.updateAccessToken();
     await this.api.setHotWaterBoost(this.getData().id, state);
   }
 
   async setHotWaterTemperature(temperature) {
-    await this.updateAccessToken();
     await this.api.setHotWaterTemperature(this.getData().id, temperature)
       .then(() => {
         this.setCapabilityValue('desired_hot_water_temperature', temperature);

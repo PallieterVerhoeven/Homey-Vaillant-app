@@ -18,8 +18,6 @@ module.exports = class MyApp extends Homey.App {
     if (this.homey.settings.get('accessToken')) {
       await this.authentication.renewToken('netherlands');
       renewIn = this.homey.settings.get('accessTokenExpireAt') - Date.now() - 60000;
-      console.log('renewIn', renewIn);
-
     }
 
     setTimeout(() => {
