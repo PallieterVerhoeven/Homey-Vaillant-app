@@ -1,6 +1,6 @@
 # 🐰 myVaillant
 Homey app that interacts with the myVaillant api that is normally used by the mobile app. 
-In theory all app features could be supported. But not all features are implemented, please add an [issue](https://github.com/PallieterVerhoeven/Homey-Vaillant-app/issues/new) or PR when features are missing for your use case.
+In theory all app features could be supported. But not all features are implemented, please add an [issue](https://github.com/PallieterVerhoeven/Homey-Vaillant-app/issues) or PR when features are missing for your use case.
 
 # 👌 Tested
 Tested configuration:

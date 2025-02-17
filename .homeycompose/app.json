@@ -16,6 +16,9 @@
     "en": "Comfort for your home",
     "nl": "Mijn huis, mijn comfort"
   },
+  "bugs": {
+    "url": "https://github.com/PallieterVerhoeven/Homey-Vaillant-app/issues"
+  },
   "category": [
     "climate"
   ],
@@ -28,5 +31,12 @@
   "author": {
     "name": "Pallieter Verhoeven",
     "email": "pallieter.verhoeven@gmail.com"
+  },
+  "contributing": {
+    "donate": {
+      "githubSponsors": {
+        "username": "PallieterVerhoeven"
+      }
+    }
   }
 }
