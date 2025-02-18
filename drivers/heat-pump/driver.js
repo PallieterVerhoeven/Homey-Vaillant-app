@@ -60,11 +60,12 @@ module.exports = class MyDriver extends Homey.Driver {
 
       return await Promise.all(
         devices.map(async (device) => {
+          console.log(device.id, await api.getSystemIdentifier(device.id));
+
           return {
             name: device.name,
             data: {
               id: device.id,
-              country: 'netherlands',
               identifier: await api.getSystemIdentifier(device.id),
             },
             settings: {},
