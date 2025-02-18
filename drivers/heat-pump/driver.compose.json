@@ -5,10 +5,10 @@
   "class": "heatpump",
   "capabilities": [
     "measure_power",
+    "measure_pressure",
     "alarm_tank_empty",
     "current_outdoor_temperature",
     "average_outdoor_temperature",
-    "water_pressure",
     "status",
     "current_hot_water_temperature",
     "desired_hot_water_temperature"

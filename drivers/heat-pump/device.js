@@ -7,15 +7,16 @@ module.exports = class MyDevice extends Homey.Device {
 
   async onInit() {
     this.log('Heat-pump has been initialized');
-
     this.api = new VaillantApi(this.homey.settings);
+
+    await this.capabilityMigrations();
 
     this.updateInterval = setInterval(() => {
       this.updateMeasurePower();
       this.updateSystem();
     }, 60000); // 60 seconds
 
-    this.registerCapabilityListener('water_pressure', async () => {
+    this.registerCapabilityListener('measure_pressure', async () => {
       const waterPressureChangedTrigger = this.homey.flow.getTriggerCard('water_pressure_changed');
       await waterPressureChangedTrigger.trigger();
     });
@@ -53,7 +54,7 @@ module.exports = class MyDevice extends Homey.Device {
       const system = await this.api.getSystem(this.getData().id);
 
       await this.setCapabilityValue('status', system.status);
-      await this.setCapabilityValue('water_pressure', system.waterPressure);
+      await this.setCapabilityValue('measure_pressure', system.waterPressure);
       await this.setCapabilityValue('current_outdoor_temperature', system.outdoorTemperature);
       await this.setCapabilityValue('average_outdoor_temperature', system.outdoorTemperatureAverage24h);
       await this.setCapabilityValue('current_hot_water_temperature', system.hotWaterTemperatureCurrent);
@@ -104,6 +105,15 @@ module.exports = class MyDevice extends Homey.Device {
     changedKeys
   }) {
     this.log('Heat-pump settings where changed');
+  }
+
+  async capabilityMigrations() {
+    if (this.hasCapability('measure_pressure') === false) {
+      await this.addCapability('measure_pressure');
+    }
+    if (this.hasCapability('water_pressure') === true) {
+      await this.removeCapability('water_pressure');
+    }
   }
 
 };
