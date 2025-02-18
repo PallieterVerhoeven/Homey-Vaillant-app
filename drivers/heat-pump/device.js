@@ -54,7 +54,7 @@ module.exports = class MyDevice extends Homey.Device {
       const system = await this.api.getSystem(this.getData().id);
 
       await this.setCapabilityValue('status', system.status);
-      await this.setCapabilityValue('measure_pressure', system.waterPressure);
+      await this.setCapabilityValue('water_pressure', system.waterPressure);
       await this.setCapabilityValue('current_outdoor_temperature', system.outdoorTemperature);
       await this.setCapabilityValue('average_outdoor_temperature', system.outdoorTemperatureAverage24h);
       await this.setCapabilityValue('current_hot_water_temperature', system.hotWaterTemperatureCurrent);
@@ -108,12 +108,7 @@ module.exports = class MyDevice extends Homey.Device {
   }
 
   async capabilityMigrations() {
-    if (this.hasCapability('measure_pressure') === false) {
-      await this.addCapability('measure_pressure');
-    }
-    if (this.hasCapability('water_pressure') === true) {
-      await this.removeCapability('water_pressure');
-    }
+
   }
 
 };

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- The '/homey.js' script must be included in your settings view to work -->
+    <!--    <script-->
+    <!--            type="text/javascript"-->
+    <!--            src="/homey.js"-->
+    <!--            data-origin="settings"-->
+    <!--    ></script>-->
+</head>
+<body>
+<header class="homey-header">
+    <img src="../../../assets/images/vaillant-logo.png" alt="Vaillant"
+         style="width: 100%; max-width: 200px; margin: 0 auto; display: block;">
+</header>
+
+<fieldset class="homey-form-fieldset">
+    <legend class="homey-form-legend">Login with your myVaillant account</legend>
+
+    <div class="homey-form-group">
+        <label class="homey-form-label" for="country">Select your country</label>
+        <select class="homey-form-select" name="country" id="country">
+            <option value="albania">Albania</option>
+            <option value="austria">Austria</option>
+            <option value="belgium">Belgium</option>
+            <option value="bulgaria">Bulgaria</option>
+            <option value="croatia">Croatia</option>
+            <option value="cyprus">Cyprus</option>
+            <option value="czechrepublic">Czechia</option>
+            <option value="denmark">Denmark</option>
+            <option value="estonia">Estonia</option>
+            <option value="finland">Finland</option>
+            <option value="france">France</option>
+            <option value="georgia">Georgia</option>
+            <option value="germany">Germany</option>
+            <option value="greece">Greece</option>
+            <option value="hungary">Hungary</option>
+            <option value="ireland">Ireland</option>
+            <option value="italy">Italy</option>
+            <option value="kosovo">Kosovo</option>
+            <option value="latvia">Latvia</option>
+            <option value="lithuania">Lithuania</option>
+            <option value="luxembourg">Luxembourg</option>
+            <option value="netherlands">Netherlands</option>
+            <option value="norway">Norway</option>
+            <option value="poland">Poland</option>
+            <option value="portugal">Portugal</option>
+            <option value="romania">Romania</option>
+            <option value="serbia">Serbia</option>
+            <option value="slovakia">Slovakia</option>
+            <option value="slovenia">Slovenia</option>
+            <option value="spain">Spain</option>
+            <option value="sweden">Sweden</option>
+            <option value="switzerland">Switzerland</option>
+            <option value="turkiye">Turkey</option>
+            <option value="ukraine">Ukraine</option>
+            <option value="unitedkingdom">United Kingdom</option>
+            <option value="uzbekistan">Uzbekistan</option>
+        </select>
+    </div>
+    <div class="homey-form-group">
+        <label class="homey-form-label" for="username">Email</label>
+        <input class="homey-form-input" id="username" type="text" value=""/>
+    </div>
+    <div class="homey-form-group">
+        <label class="homey-form-label" for="password">Password</label>
+        <input class="homey-form-input" id="password" type="password" value=""/>
+    </div>
+</fieldset>
+
+<button type="button" id="save" class="homey-button-primary-full">Login</button>
+
+<script type="text/javascript">
+  var countryElement = document.getElementById('country');
+  var usernameElement = document.getElementById('username');
+  var passwordElement = document.getElementById('password');
+  var saveElement = document.getElementById('save');
+
+  saveElement.addEventListener('click', function(element) {
+    element.target.classList.add('is-loading');
+    countryElement.disabled = true;
+    usernameElement.disabled = true;
+    passwordElement.disabled = true;
+
+    Homey.emit('login', {
+      country: countryElement.value,
+      username: usernameElement.value,
+      password: passwordElement.value
+    })
+      .then(function(isLoggedIn) {
+        if (isLoggedIn === false) {
+          element.target.classList.remove('is-loading');
+          countryElement.disabled = false;
+          usernameElement.disabled = false;
+          passwordElement.disabled = false;
+          return Homey.alert('Failed to login myVaillant account, check your credentials and country.');
+        }
+      });
+  });
+</script>
+</body>
+</html>

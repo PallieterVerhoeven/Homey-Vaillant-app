@@ -60,6 +60,55 @@
     ],
     "conditions": [
       {
+        "id": "current_heating_mode",
+        "title": {
+          "en": "Current heating mode !{{is|isn't}} ...",
+          "nl": "Huidige verwarmingsmodus !{{is|is niet}} ..."
+        },
+        "titleFormatted": {
+          "en": "Current heating mode !{{is|isn't}} [[heatingMode]]",
+          "nl": "Huidige verwarmingsmodus !{{is|is niet}} [[heatingMode]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=heat-pump"
+          },
+          {
+            "type": "dropdown",
+            "name": "heatingMode",
+            "title": {
+              "en": "Heating mode",
+              "nl": "Verwarmingsmodus"
+            },
+            "values": [
+              {
+                "id": "heating",
+                "label": {
+                  "en": "Heating",
+                  "nl": "Verwarmen"
+                }
+              },
+              {
+                "id": "hot-water",
+                "label": {
+                  "en": "Hot water",
+                  "nl": "Warm water"
+                }
+              },
+              {
+                "id": "standby",
+                "label": {
+                  "en": "standby",
+                  "nl": "Standby"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
         "id": "desired_hot_water_temperature",
         "highlight": true,
         "title": {
@@ -108,55 +157,6 @@
             "type": "device",
             "name": "device",
             "filter": "driver_id=heat-pump"
-          }
-        ]
-      },
-      {
-        "id": "current_heating_mode",
-        "title": {
-          "en": "Current heating mode !{{is|isn't}} ...",
-          "nl": "Huidige verwarmingsmodus !{{is|is niet}} ..."
-        },
-        "titleFormatted": {
-          "en": "Current heating mode !{{is|isn't}} [[heatingMode]]",
-          "nl": "Huidige verwarmingsmodus !{{is|is niet}} [[heatingMode]]"
-        },
-        "args": [
-          {
-            "type": "device",
-            "name": "device",
-            "filter": "driver_id=zone"
-          },
-          {
-            "type": "dropdown",
-            "name": "heatingMode",
-            "title": {
-              "en": "Heating mode",
-              "nl": "Verwarmingsmodus"
-            },
-            "values": [
-              {
-                "id": "heating",
-                "label": {
-                  "en": "Heating",
-                  "nl": "Verwarmen"
-                }
-              },
-              {
-                "id": "hot-water",
-                "label": {
-                  "en": "Hot water",
-                  "nl": "Warm water"
-                }
-              },
-              {
-                "id": "standby",
-                "label": {
-                  "en": "standby",
-                  "nl": "Standby"
-                }
-              }
-            ]
           }
         ]
       }
@@ -304,14 +304,14 @@
       },
       "class": "heatpump",
       "capabilities": [
+        "status",
         "measure_power",
-        "measure_pressure",
-        "alarm_tank_empty",
         "current_outdoor_temperature",
         "average_outdoor_temperature",
-        "status",
         "current_hot_water_temperature",
-        "desired_hot_water_temperature"
+        "desired_hot_water_temperature",
+        "alarm_tank_empty",
+        "water_pressure"
       ],
       "capabilitiesOptions": {
         "measure_power": {
@@ -330,6 +330,9 @@
         "xlarge": "/drivers/heat-pump/assets/images/xlarge.png"
       },
       "pair": [
+        {
+          "id": "login"
+        },
         {
           "id": "login_credentials",
           "template": "login_credentials",
@@ -545,10 +548,29 @@
       "title": {
         "en": "Status"
       },
+      "icon": "/assets/valve_position.svg",
       "uiComponent": "sensor",
       "insights": false,
       "getable": true,
       "setable": false
+    },
+    "water_pressure": {
+      "type": "number",
+      "title": {
+        "en": "Water pressure",
+        "nl": "Waterdruk"
+      },
+      "icon": "/assets/pressure.svg",
+      "uiComponent": "sensor",
+      "insights": true,
+      "getable": true,
+      "setable": false,
+      "units": {
+        "en": "Bar"
+      },
+      "min": 0,
+      "max": 10,
+      "step": 0.1
     }
   }
 }

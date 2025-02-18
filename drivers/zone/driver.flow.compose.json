@@ -1,49 +1,5 @@
 {
   "conditions": [
-    {
-      "id": "current_heating_mode",
-      "title": {
-        "en": "Current heating mode !{{is|isn't}} ...",
-        "nl": "Huidige verwarmingsmodus !{{is|is niet}} ..."
-      },
-      "titleFormatted": {
-        "en": "Current heating mode !{{is|isn't}} [[heatingMode]]",
-        "nl": "Huidige verwarmingsmodus !{{is|is niet}} [[heatingMode]]"
-      },
-      "args": [
-        {
-          "type": "dropdown",
-          "name": "heatingMode",
-          "title": {
-            "en": "Heating mode",
-            "nl": "Verwarmingsmodus"
-          },
-          "values": [
-            {
-              "id": "heating",
-              "label": {
-                "en": "Heating",
-                "nl": "Verwarmen"
-              }
-            },
-            {
-              "id": "hot-water",
-              "label": {
-                "en": "Hot water",
-                "nl": "Warm water"
-              }
-            },
-            {
-              "id": "standby",
-              "label": {
-                "en": "standby",
-                "nl": "Standby"
-              }
-            }
-          ]
-        }
-      ]
-    }
   ],
   "actions": [
     {
