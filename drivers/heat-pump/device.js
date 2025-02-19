@@ -48,6 +48,18 @@ module.exports = class MyDevice extends Homey.Device {
       this.error('Error while updating measure_power:', err);
     }
   }
+  async onAdded() {
+    this.log('Heat-pump has been added');
+    await this.updateSystem();
+  }
+
+  async onDeleted() {
+    this.log('Heat-pump has been deleted');
+
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+  }
 
   async updateSystem() {
     try {
@@ -64,19 +76,6 @@ module.exports = class MyDevice extends Homey.Device {
       console.log('System updated');
     } catch (err) {
       this.error('Error while updating system state:', err);
-    }
-  }
-
-  async onAdded() {
-    this.log('Heat-pump has been added');
-    await this.updateSystem();
-  }
-
-  async onDeleted() {
-    this.log('Heat-pump has been deleted');
-
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval);
     }
   }
 
