@@ -16,5 +16,8 @@
   },
   "1.0.6": {
     "en": "Fix homey topic id"
+  },
+  "1.1.0": {
+    "en": "Add support for multiple countries"
   }
 }
