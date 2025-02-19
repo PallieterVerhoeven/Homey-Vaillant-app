@@ -31,18 +31,27 @@ module.exports = class MyDriver extends Homey.Driver {
   }
 
   async onPair(session) {
+    this.authentication = new VaillantAuthentication(this.homey.settings);
+
     session.setHandler('showView', async (viewId) => {
-      if (viewId === 'login_credentials' && this.homey.settings.get('accessToken')) {
+      if (viewId === 'login' && this.authentication.isLoggedIn()) {
         await session.showView('list_devices');
       }
     });
 
     session.setHandler('login', async (data) => {
-      return await this.authentication.login(
-        'netherlands',
+      await this.authentication.login(
+        data.country,
         data.username,
         data.password,
       );
+
+      if (this.authentication.isLoggedIn()) {
+        await session.showView('list_devices');
+        return true;
+      }
+
+      return false;
     });
 
     session.setHandler('list_devices', async () => {
@@ -51,11 +60,12 @@ module.exports = class MyDriver extends Homey.Driver {
 
       return await Promise.all(
         devices.map(async (device) => {
+          console.log(device.id, await api.getSystemIdentifier(device.id));
+
           return {
             name: device.name,
             data: {
               id: device.id,
-              country: 'netherlands',
               identifier: await api.getSystemIdentifier(device.id),
             },
             settings: {},

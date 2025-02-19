@@ -1,6 +1,9 @@
 {
   "type": "string",
-  "title": { "en": "Status" },
+  "title": {
+    "en": "Status"
+  },
+  "icon": "/assets/valve_position.svg",
   "uiComponent": "sensor",
   "insights": false,
   "getable": true,

@@ -15,8 +15,8 @@ module.exports = class MyApp extends Homey.App {
   async updateAccessToken() {
     let renewIn = 300000; // 5 minutes
 
-    if (this.homey.settings.get('accessToken')) {
-      await this.authentication.renewToken('netherlands');
+    if (this.authentication.isLoggedIn()) {
+      await this.authentication.renewToken(this.homey.settings.get('country'));
       renewIn = this.homey.settings.get('accessTokenExpireAt') - Date.now() - 60000;
     }
 

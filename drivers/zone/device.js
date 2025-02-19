@@ -39,6 +39,11 @@ module.exports = class MyDevice extends Homey.Device {
     }, 60000); // 60 seconds
   }
 
+  async onAdded() {
+    this.log('Zone has been added');
+    await this.updateZone();
+  }
+
   async onDeleted() {
     this.log('Zone has been deleted');
 

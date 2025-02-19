@@ -7,15 +7,16 @@ module.exports = class MyDevice extends Homey.Device {
 
   async onInit() {
     this.log('Heat-pump has been initialized');
-
     this.api = new VaillantApi(this.homey.settings);
+
+    await this.capabilityMigrations();
 
     this.updateInterval = setInterval(() => {
       this.updateMeasurePower();
       this.updateSystem();
     }, 60000); // 60 seconds
 
-    this.registerCapabilityListener('water_pressure', async () => {
+    this.registerCapabilityListener('measure_pressure', async () => {
       const waterPressureChangedTrigger = this.homey.flow.getTriggerCard('water_pressure_changed');
       await waterPressureChangedTrigger.trigger();
     });
@@ -47,6 +48,18 @@ module.exports = class MyDevice extends Homey.Device {
       this.error('Error while updating measure_power:', err);
     }
   }
+  async onAdded() {
+    this.log('Heat-pump has been added');
+    await this.updateSystem();
+  }
+
+  async onDeleted() {
+    this.log('Heat-pump has been deleted');
+
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
+  }
 
   async updateSystem() {
     try {
@@ -63,19 +76,6 @@ module.exports = class MyDevice extends Homey.Device {
       console.log('System updated');
     } catch (err) {
       this.error('Error while updating system state:', err);
-    }
-  }
-
-  async onAdded() {
-    this.log('Heat-pump has been added');
-    await this.updateSystem();
-  }
-
-  async onDeleted() {
-    this.log('Heat-pump has been deleted');
-
-    if (this.updateInterval) {
-      clearInterval(this.updateInterval);
     }
   }
 
@@ -104,6 +104,10 @@ module.exports = class MyDevice extends Homey.Device {
     changedKeys
   }) {
     this.log('Heat-pump settings where changed');
+  }
+
+  async capabilityMigrations() {
+
   }
 
 };
