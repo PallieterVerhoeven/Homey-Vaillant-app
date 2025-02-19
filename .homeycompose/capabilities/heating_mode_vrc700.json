@@ -1,0 +1,40 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Heating mode",
+    "nl": "Verwarmingsmodus"
+  },
+  "uiComponent": "picker",
+  "getable": true,
+  "setable": true,
+  "values": [
+    {
+      "id": "AUTO",
+      "title": {
+        "en": "Auto",
+        "nl": "Auto"
+      }
+    },
+    {
+      "id": "DAY",
+      "title": {
+        "en": "Day",
+        "nl": "Dag"
+      }
+    },
+    {
+      "id": "SET_BACK",
+      "title": {
+        "en": "Night",
+        "nl": "Nacht"
+      }
+    },
+    {
+      "id": "OFF",
+      "title": {
+        "en": "Off",
+        "nl": "Uit"
+      }
+    }
+  ]
+}

@@ -42,12 +42,14 @@ module.exports = class MyDriver extends Homey.Driver {
       const allZones = await Promise.all(
         devices.map(async (device) => {
           const zones = await api.getZones(device.id);
+          const controlIdentifier = await api.getSystemIdentifier(device.id);
           return zones.map((zone) => ({
             name: zone.name,
             data: {
               id: device.id + '-' + zone.index,
               zoneId: zone.index,
               systemId: device.id,
+              controlIdentifier: controlIdentifier,
             },
             settings: {},
           }));

@@ -11,9 +11,7 @@ module.exports = class MyDriver extends Homey.Driver {
    */
   async onInit() {
     this.log('Initialize authentication');
-    // this.authentication = new VaillantAuthentication(this.homey.settings);
 
-    this.log('Register actions');
     const startHotWaterBoostAction = this.homey.flow.getActionCard('start_hot_water_boost');
     startHotWaterBoostAction.registerRunListener(async (args) => {
       await args.device.setHotWaterBoost(true);
@@ -60,13 +58,11 @@ module.exports = class MyDriver extends Homey.Driver {
 
       return await Promise.all(
         devices.map(async (device) => {
-          console.log(device.id, await api.getSystemIdentifier(device.id));
-
           return {
             name: device.name,
             data: {
               id: device.id,
-              identifier: await api.getSystemIdentifier(device.id),
+              controlIdentifier: await api.getSystemIdentifier(device.id),
             },
             settings: {},
           };

@@ -6,8 +6,11 @@ const VaillantApi = require('../../lib/vaillant-api');
 module.exports = class MyDevice extends Homey.Device {
   async onInit() {
     this.log('Zone has been initialized');
-
     this.api = new VaillantApi(this.homey.settings);
+
+    if (await this.isVRC700()) {
+      await this.setCapabilityVRC700();
+    }
 
     this.registerCapabilityListener('target_temperature', async (targetTemperature) => {
       await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, targetTemperature, 3)
@@ -16,22 +19,22 @@ module.exports = class MyDevice extends Homey.Device {
         });
     });
 
-    this.registerCapabilityListener('heating_mode', async (heatingMode) => {
-      // TODO: Not sure how to set the heating mode
-      // await this.api.set...(this.getData().systemId, this.getData().zoneId, heatingMode)
-      //   .then(() => {
-      //     this.setCapabilityValue('heating_mode', heatingMode);
-      //   });
+    this.registerMultipleCapabilityListener(['heating_mode', 'heating_mode_vrc700'], async (operationMode) => {
+      await this.api.setHeatingMode(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, Object.values(operationMode)[0]);
+      setTimeout(() => {
+        // Delay because the API needs some time to update the zone
+        this.updateZone();
+      }, 5000);
     });
 
     const setTemperatureVetoForDurationAction = this.homey.flow.getActionCard('set_temperature_veto_for_duration');
     setTemperatureVetoForDurationAction.registerRunListener(async (args) => {
-      await this.setQuickVeto(args.temperature, args.durationInHours);
+      await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, args.temperature, args.durationInHours);
     });
 
     const cancelTemperatureVetoAction = this.homey.flow.getActionCard('cancel_temperature_veto');
     cancelTemperatureVetoAction.registerRunListener(async () => {
-      await this.cancelQuickVeto();
+      await this.api.cancelQuickVeto(this.getData().systemId, this.getData().zoneId);
     });
 
     this.updateInterval = setInterval(() => {
@@ -60,20 +63,17 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setCapabilityValue('measure_temperature', zone.currentRoomTemperature);
       await this.setCapabilityValue('target_temperature', zone.desiredRoomTemperature);
       await this.setCapabilityValue('measure_humidity', zone.currentRoomHumidity);
-      await this.setCapabilityValue('heating_mode', zone.heatingMode);
+
+      if (this.hasCapability('heating_mode_vrc700')) {
+        await this.setCapabilityValue('heating_mode_vrc700', zone.heatingMode);
+      } else {
+        await this.setCapabilityValue('heating_mode', zone.heatingMode);
+      }
 
       console.log('Zone updated');
     } catch (err) {
       this.error('Error while updating system state:', err);
     }
-  }
-
-  async setQuickVeto(temperature, durationInHours) {
-    await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, temperature, durationInHours);
-  }
-
-  async cancelQuickVeto() {
-    await this.api.cancelQuickVeto(this.getData().systemId, this.getData().zoneId);
   }
 
   /**
@@ -90,6 +90,17 @@ module.exports = class MyDevice extends Homey.Device {
     changedKeys
   }) {
     this.log('Zone settings where changed');
+  }
+
+  async isVRC700() {
+    return this.getData().controlIdentifier === 'vrc700';
+  }
+
+  async setCapabilityVRC700() {
+    if (this.hasCapability('heating_mode')) {
+      await this.removeCapability('heating_mode');
+      await this.addCapability('heating_mode_vrc700');
+    }
   }
 
 };
