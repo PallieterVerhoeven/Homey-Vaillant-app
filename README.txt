@@ -9,6 +9,3 @@ Tested configuration:
 - sensoNet VR 921
 - sensoComfort VRC720
 
-❌ Limitations:
-- Only works for Dutch myVaillant accounts (will be fixed soon)
-

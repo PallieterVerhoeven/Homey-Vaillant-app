@@ -9,14 +9,13 @@ Tested configuration:
 - sensoNet VR 921
 - sensoComfort VRC720
 
-
 # ❤️ Credits
 This Homey application leans heavy on the hard work of the following projects:
 - https://github.com/signalkraft/myPyllant
 - https://github.com/TA2k/ioBroker.vaillant
 
-# [🍺 Buy me a beer](https://github.com/sponsor/PallieterVerhoeven)
+# [🍺 Buy me a beer](https://github.com/sponsors/PallieterVerhoeven)
 
 If you like this app, feel free to buy me a beer 🍺
 
-[Donate](https://github.com/sponsor/PallieterVerhoeven)
+[Donate](https://github.com/sponsors/PallieterVerhoeven)
