@@ -1,4 +1,4 @@
-name: Publish Homey App
+name: Update & Publish Homey App
 on:
   workflow_dispatch:
     inputs:
@@ -16,14 +16,16 @@ on:
         description: Changelog
         required: true
 
-# Needed in order to push the commit and create a release
+# Needed in order to push the commit, create a release, and publish the app
 permissions:
   contents: write
 
 jobs:
-  main:
+  update_version:
     name: Update Homey App Version
     runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.update_app_version.outputs.version }}
     steps:
       - uses: actions/checkout@v4
 
@@ -49,7 +51,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ github.token }}
 
-      # Start publishing the app
+  publish:
+    name: Publish Homey App
+    runs-on: ubuntu-latest
+    needs: update_version
+    steps:
       - uses: actions/checkout@v4
 
       - name: Create env.json
@@ -58,7 +64,7 @@ jobs:
             "GRAFANA_LOKI_HOST": "${{ secrets.GRAFANA_LOKI_HOST }}",
             "GRAFANA_LOKI_TOKEN": "${{ secrets.GRAFANA_LOKI_TOKEN }}"
           }' > env.json
-
+          
       - name: Publish Homey App
         uses: athombv/github-action-homey-app-publish@master
         id: publish
@@ -68,4 +74,3 @@ jobs:
       - name: URL
         run: |
           echo "Manage your app at ${{ steps.publish.outputs.url }}." >> $GITHUB_STEP_SUMMARY
-
