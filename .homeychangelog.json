@@ -49,5 +49,8 @@
   },
   "1.5.1": {
     "en": "Fix deploy script"
+  },
+  "1.5.2": {
+    "en": "Fix deploy script"
   }
 }
