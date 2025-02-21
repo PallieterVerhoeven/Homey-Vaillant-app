@@ -46,5 +46,8 @@
   },
   "1.5.0": {
     "en": "Add heating mode action card"
+  },
+  "1.5.1": {
+    "en": "Fix deploy script"
   }
 }
