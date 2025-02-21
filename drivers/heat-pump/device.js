@@ -18,11 +18,19 @@ module.exports = class MyDevice extends Homey.Device {
       this.updateSystem();
     }, 60000); // 60 seconds
 
+    await this.triggers();
+    await this.conditions();
+    await this.actions();
+  }
+
+  async triggers() {
     this.registerCapabilityListener('measure_pressure', async () => {
       const waterPressureChangedTrigger = this.homey.flow.getTriggerCard('water_pressure_changed');
       await waterPressureChangedTrigger.trigger();
     });
+  }
 
+  async conditions() {
     const safeWaterPressureCondition = this.homey.flow.getConditionCard('safe_water_pressure');
     await safeWaterPressureCondition.registerRunListener(async () => {
       return this.getCapabilityValue('safe_water_pressure');
@@ -38,7 +46,23 @@ module.exports = class MyDevice extends Homey.Device {
       // TODO: Should use enum for heatingMode
       return args.heatingMode === this.getCapabilityValue('status');
     });
+  }
 
+  async actions() {
+    const startHotWaterBoostAction = this.homey.flow.getActionCard('start_hot_water_boost');
+    startHotWaterBoostAction.registerRunListener(async (args) => {
+      await this.api.setHotWaterBoost(this.getData().id, true);
+    });
+
+    const stopHotWaterBoostAction = this.homey.flow.getActionCard('stop_hot_water_boost');
+    stopHotWaterBoostAction.registerRunListener(async (args) => {
+      await this.api.setHotWaterBoost(this.getData().id, false);
+    });
+
+    const setHotWaterTemperature = this.homey.flow.getActionCard('set_hot_water_temperature');
+    setHotWaterTemperature.registerRunListener(async (args) => {
+      await this.api.setHotWaterTemperature(this.getData().id, args.temperature);
+    });
   }
 
   async updateMeasurePower() {
@@ -76,20 +100,9 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setCapabilityValue('current_hot_water_temperature', system.hotWaterTemperatureCurrent);
       await this.setCapabilityValue('desired_hot_water_temperature', system.hotWaterTemperatureDesired);
       await this.setCapabilityValue('alarm_tank_empty', system.hotWaterTemperatureCurrent && system.hotWaterTemperatureCurrent < 38);
-    } catch (err) {
-      this.error('Error while updating system state:', err);
+    } catch (error) {
+      this.logger.error('Error updating capabilities', { error: JSON.stringify(error) });
     }
-  }
-
-  async setHotWaterBoost(state) {
-    await this.api.setHotWaterBoost(this.getData().id, state);
-  }
-
-  async setHotWaterTemperature(temperature) {
-    await this.api.setHotWaterTemperature(this.getData().id, temperature)
-      .then(() => {
-        this.setCapabilityValue('desired_hot_water_temperature', temperature);
-      });
   }
 
   /**

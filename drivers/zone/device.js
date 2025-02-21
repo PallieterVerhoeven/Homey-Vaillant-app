@@ -29,6 +29,24 @@ module.exports = class MyDevice extends Homey.Device {
       }, 5000);
     });
 
+    await this.triggers();
+    await this.conditions();
+    await this.action();
+
+    this.updateInterval = setInterval(() => {
+      this.updateZone();
+    }, 60000); // 60 seconds
+  }
+
+  async triggers() {
+
+  }
+
+  async conditions() {
+
+  }
+
+  async action() {
     const setTemperatureVetoForDurationAction = this.homey.flow.getActionCard('set_temperature_veto_for_duration');
     setTemperatureVetoForDurationAction.registerRunListener(async (args) => {
       await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, args.temperature, args.durationInHours);
@@ -38,10 +56,6 @@ module.exports = class MyDevice extends Homey.Device {
     cancelTemperatureVetoAction.registerRunListener(async () => {
       await this.api.cancelQuickVeto(this.getData().systemId, this.getData().zoneId);
     });
-
-    this.updateInterval = setInterval(() => {
-      this.updateZone();
-    }, 60000); // 60 seconds
   }
 
   async onAdded() {
@@ -61,7 +75,7 @@ module.exports = class MyDevice extends Homey.Device {
     try {
       const zone = await this.api.getZone(this.getData().systemId, this.getData().zoneId);
 
-      this.logger.info('Zone updated', {zone: JSON.stringify(zone)});
+      this.logger.info('Zone updated', { zone: JSON.stringify(zone) });
       await this.setCapabilityValue('measure_temperature', zone.currentRoomTemperature);
       await this.setCapabilityValue('target_temperature', zone.desiredRoomTemperature);
       await this.setCapabilityValue('measure_humidity', zone.currentRoomHumidity);
@@ -71,8 +85,8 @@ module.exports = class MyDevice extends Homey.Device {
       } else {
         await this.setCapabilityValue('heating_mode', zone.heatingMode);
       }
-    } catch (err) {
-      this.logger.error('Error while updating system state:', err);
+    } catch (error) {
+      this.logger.error('Error updating capabilities', { error: JSON.stringify(error) });
     }
   }
 
