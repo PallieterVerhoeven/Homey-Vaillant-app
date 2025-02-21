@@ -75,7 +75,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setCapabilityValue('average_outdoor_temperature', system.outdoorTemperatureAverage24h);
       await this.setCapabilityValue('current_hot_water_temperature', system.hotWaterTemperatureCurrent);
       await this.setCapabilityValue('desired_hot_water_temperature', system.hotWaterTemperatureDesired);
-      await this.setCapabilityValue('alarm_tank_empty', system.hotWaterTemperatureCurrent < 38);
+      await this.setCapabilityValue('alarm_tank_empty', system.hotWaterTemperatureCurrent && system.hotWaterTemperatureCurrent < 38);
     } catch (err) {
       this.error('Error while updating system state:', err);
     }
