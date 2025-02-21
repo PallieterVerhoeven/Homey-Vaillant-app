@@ -40,5 +40,8 @@
   },
   "1.4.0": {
     "en": "Add device repair"
+  },
+  "1.4.1": {
+    "en": "Fix for systems without domestic hot water"
   }
 }
