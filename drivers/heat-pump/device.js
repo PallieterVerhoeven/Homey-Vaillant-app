@@ -2,12 +2,14 @@
 
 const Homey = require('homey');
 const VaillantApi = require('../../lib/vaillant-api');
+const Logger = require('../../lib/logger');
 
 module.exports = class MyDevice extends Homey.Device {
 
   async onInit() {
-    this.log('Heat-pump has been initialized');
-    this.api = new VaillantApi(this.homey.settings);
+    this.logger = new Logger(this.homey).getLogger();
+    this.logger.info('Heat-pump has been initialized');
+    this.api = new VaillantApi(this.homey.settings, this.logger);
 
     await this.capabilityMigrations();
 
@@ -48,6 +50,7 @@ module.exports = class MyDevice extends Homey.Device {
       this.error('Error while updating measure_power:', err);
     }
   }
+
   async onAdded() {
     this.log('Heat-pump has been added');
     await this.updateSystem();
@@ -65,6 +68,7 @@ module.exports = class MyDevice extends Homey.Device {
     try {
       const system = await this.api.getSystem(this.getData().id);
 
+      this.logger.info('System updated', { system: JSON.stringify(system) });
       await this.setCapabilityValue('status', system.status);
       await this.setCapabilityValue('water_pressure', system.waterPressure);
       await this.setCapabilityValue('current_outdoor_temperature', system.outdoorTemperature);
@@ -72,8 +76,6 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setCapabilityValue('current_hot_water_temperature', system.hotWaterTemperatureCurrent);
       await this.setCapabilityValue('desired_hot_water_temperature', system.hotWaterTemperatureDesired);
       await this.setCapabilityValue('alarm_tank_empty', system.hotWaterTemperatureCurrent < 38);
-
-      console.log('System updated');
     } catch (err) {
       this.error('Error while updating system state:', err);
     }

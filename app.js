@@ -2,17 +2,37 @@
 
 const Homey = require('homey');
 const VaillantAuthentication = require('./lib/vaillant-authentication');
+const VaillantApi = require('./lib/vaillant-api');
+const Logger = require('./lib/logger');
 
 module.exports = class MyApp extends Homey.App {
 
   async onInit() {
-    this.log('MyApp has been initialized');
+    this.logger = new Logger(this.homey).getLogger();
+    this.logger.info('Initialize App');
 
-    this.authentication = new VaillantAuthentication(this.homey.settings);
+    this.authentication = new VaillantAuthentication(this.homey.settings, this.logger);
+
+    if (this.homey.settings.get('loggingEnabled')) {
+      this.api = new VaillantApi(this.homey.settings, this.logger);
+      await this.updateAccessToken();
+      this.api.getHeatingSystemsList()
+        .then((devices) => {
+          if(!devices) {
+            return;
+          }
+
+          for (const device of devices) {
+            this.api.getSystem(device.id);
+          }
+        });
+    }
+
     await this.updateAccessToken();
   }
 
   async updateAccessToken() {
+    this.logger.info('Update access token');
     let renewIn = 300000; // 5 minutes
 
     if (this.authentication.isLoggedIn()) {
@@ -21,7 +41,6 @@ module.exports = class MyApp extends Homey.App {
     }
 
     setTimeout(() => {
-      console.log('updateAccessToken()');
       this.updateAccessToken();
     }, renewIn);
   }
