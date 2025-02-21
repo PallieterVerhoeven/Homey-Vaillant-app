@@ -51,6 +51,31 @@
       ]
     },
     {
+      "id": "set_heating_mode",
+      "title": {
+        "en": "Set heating mode to ...",
+        "nl": "Stel verwarmingsmodus in op ..."
+      },
+      "titleFormatted": {
+        "en": "Set heating mode to [[heatingMode]]",
+        "nl": "Stel verwarmingsmodus in op [[heatingMode]]"
+      },
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "heatingMode",
+          "title": {
+            "en": "Mode",
+            "nl": "Modus"
+          },
+          "placeholder": {
+            "en": "Auto",
+            "nl": "Auto"
+          }
+        }
+      ]
+    },
+    {
       "id": "cancel_temperature_veto",
       "title": {
         "en": "Cancel manual temperature",

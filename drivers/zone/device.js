@@ -56,6 +56,49 @@ module.exports = class MyDevice extends Homey.Device {
     cancelTemperatureVetoAction.registerRunListener(async () => {
       await this.api.cancelQuickVeto(this.getData().systemId, this.getData().zoneId);
     });
+
+    const setHeatingModeAction = this.homey.flow.getActionCard('set_heating_mode');
+    setHeatingModeAction.registerRunListener(async (args) => {
+      await this.api.setHeatingMode(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, args.heatingMode.id);
+    });
+    setHeatingModeAction.registerArgumentAutocompleteListener(
+      'heatingMode',
+      async (query, args) => {
+        const options = [];
+
+        if (this.getData().controlIdentifier === 'vrc700') {
+          options.push({
+              id: 'AUTO',
+              name: 'Auto',
+            },
+            {
+              id: 'DAY',
+              name: 'Day',
+            },
+            {
+              id: 'SET_BACK',
+              name: 'Set Back',
+            });
+        } else {
+          options.push({
+              id: 'MANUAL',
+              name: 'Manual',
+            },
+            {
+              id: 'TIME_CONTROLLED',
+              name: 'Time Controlled',
+            },
+            {
+              id: 'OFF',
+              name: 'Off',
+            });
+        }
+
+        return options.filter((option) => {
+          return option.name.toLowerCase().includes(query.toLowerCase());
+        });
+      }
+    );
   }
 
   async onAdded() {
