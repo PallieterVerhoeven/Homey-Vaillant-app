@@ -34,5 +34,8 @@
   },
   "1.3.2": {
     "en": "Add logging needs restart message"
+  },
+  "1.3.3": {
+    "en": "Fix pairing zone device"
   }
 }
