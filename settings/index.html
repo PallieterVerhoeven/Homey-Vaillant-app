@@ -55,9 +55,7 @@
     Homey.ready();
 
     var loggingEnabledElement = document.getElementById('logging-enabled');
-    var loggingEnabledFieldElement = document.getElementById('logging-id-field');
     var loggingIdElement = document.getElementById('logging-id');
-
 
     Homey.get('loggingEnabled', function(err, loggingEnabled) {
       loggingEnabledElement.checked = loggingEnabled;
