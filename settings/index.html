@@ -7,8 +7,18 @@
             src="/homey.js"
             data-origin="settings"
     ></script>
+    <style>
+        .warning {
+            display: none;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            background: rgb(255, 167, 169);
+            padding: 12px;
+        }
+    </style>
 </head>
 <body>
+
 <header class="homey-header">
     <img src="../assets/images/vaillant-logo.png" alt="Vaillant"
          style="width: 100%; max-width: 200px; margin: 0 auto; display: block;">
@@ -40,27 +50,17 @@
     ⚠️ <strong>Warning:</strong> Restart the myVaillant app to apply the changes!
 </div>
 
-<style>
-    .warning {
-        display: none;
-        border-radius: 4px;
-        border: 1px solid transparent;
-        background: rgb(255, 167, 169);
-        padding: 12px;
-    }
-</style>
+<hr>
 
-<!--<hr>-->
-<!---->
-<!--<div class="homey-form-group">-->
-<!--    <h1 class="homey-title">Clear app data</h1>-->
-<!--    <ul class="homey-subtitle">-->
-<!--        <li>Remove app settings</li>-->
-<!--        <li>Remove myVaillant access token</li>-->
-<!--    </ul>-->
+<div class="homey-form-group">
+    <h1 class="homey-title">Clear app data</h1>
+    <ul class="homey-subtitle">
+        <li>Remove app settings</li>
+        <li>Remove myVaillant access token</li>
+    </ul>
 
-<!--    <button id="reset" class="homey-button-danger-shadow" style="margin-top: 5px">Clear data</button>-->
-<!--</div>-->
+    <button id="reset" class="homey-button-danger-shadow" style="margin-top: 5px">Clear data</button>
+</div>
 
 
 <script type="text/javascript">

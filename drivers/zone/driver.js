@@ -62,4 +62,24 @@ module.exports = class MyDriver extends Homey.Driver {
     });
   }
 
+  async onRepair(session, device) {
+    // Argument session is a PairSocket, similar to Driver.onPair
+    // Argument device is a Homey.Device that's being repaired
+    this.authentication = new VaillantAuthentication(this.homey.settings, this.logger);
+
+    session.setHandler('login', async (data) => {
+      await this.authentication.login(
+        data.country,
+        data.username,
+        data.password,
+      );
+
+      if (this.authentication.isLoggedIn()) {
+        await session.done();
+      }
+
+      return false;
+    });
+  }
+
 };
