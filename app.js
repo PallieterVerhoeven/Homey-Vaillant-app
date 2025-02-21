@@ -8,7 +8,6 @@ const Logger = require('./lib/logger');
 module.exports = class MyApp extends Homey.App {
 
   async onInit() {
-    this.homey.settings.set('loggingEnabled', true);
     this.logger = new Logger(this.homey).getLogger();
     this.logger.info('Initialize App');
 
