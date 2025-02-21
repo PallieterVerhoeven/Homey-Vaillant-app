@@ -22,5 +22,8 @@
   },
   "1.2.0": {
     "en": "Add support for vrc700 thermostat"
+  },
+  "1.2.1": {
+    "en": "Fix app crash"
   }
 }
