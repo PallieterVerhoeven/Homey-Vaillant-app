@@ -10,11 +10,11 @@ module.exports = class MyDriver extends Homey.Driver {
   async onInit() {
     this.logger = new Logger(this.homey).getLogger();
     this.logger.info('Zone driver has been initialized');
-    this.authentication = new VaillantAuthentication(this.homey.settings);
+    this.authentication = new VaillantAuthentication(this.homey.settings, this.logger);
   }
 
   async onPair(session) {
-    this.authentication = new VaillantAuthentication(this.homey.settings);
+    this.authentication = new VaillantAuthentication(this.homey.settings, this.logger);
 
     session.setHandler('showView', async (viewId) => {
       if (viewId === 'login' && this.authentication.isLoggedIn()) {
@@ -38,7 +38,7 @@ module.exports = class MyDriver extends Homey.Driver {
     });
 
     session.setHandler('list_devices', async () => {
-      const api = new VaillantApi(this.homey.settings);
+      const api = new VaillantApi(this.homey.settings, this.logger);
       const devices = await api.getHeatingSystemsList();
 
       const allZones = await Promise.all(
