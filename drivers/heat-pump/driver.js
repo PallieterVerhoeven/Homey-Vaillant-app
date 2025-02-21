@@ -3,6 +3,7 @@
 const Homey = require('homey');
 const VaillantAuthentication = require('../../lib/vaillant-authentication');
 const VaillantApi = require('../../lib/vaillant-api');
+const Logger = require('../../lib/logger');
 
 module.exports = class MyDriver extends Homey.Driver {
 
@@ -10,7 +11,8 @@ module.exports = class MyDriver extends Homey.Driver {
    * onInit is called when the driver is initialized.
    */
   async onInit() {
-    this.log('Initialize authentication');
+    this.logger = new Logger(this.homey).getLogger();
+    this.logger.info('Heat-pump driver has been initialized');
 
     const startHotWaterBoostAction = this.homey.flow.getActionCard('start_hot_water_boost');
     startHotWaterBoostAction.registerRunListener(async (args) => {
@@ -29,7 +31,7 @@ module.exports = class MyDriver extends Homey.Driver {
   }
 
   async onPair(session) {
-    this.authentication = new VaillantAuthentication(this.homey.settings);
+    this.authentication = new VaillantAuthentication(this.homey.settings, this.logger);
 
     session.setHandler('showView', async (viewId) => {
       if (viewId === 'login' && this.authentication.isLoggedIn()) {
@@ -53,7 +55,7 @@ module.exports = class MyDriver extends Homey.Driver {
     });
 
     session.setHandler('list_devices', async () => {
-      const api = new VaillantApi(this.homey.settings);
+      const api = new VaillantApi(this.homey.settings, this.logger);
       const devices = await api.getHeatingSystemsList();
 
       return await Promise.all(

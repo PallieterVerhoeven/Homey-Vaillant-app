@@ -2,11 +2,13 @@
 
 const Homey = require('homey');
 const VaillantApi = require('../../lib/vaillant-api');
+const Logger = require('../../lib/logger');
 
 module.exports = class MyDevice extends Homey.Device {
   async onInit() {
-    this.log('Zone has been initialized');
-    this.api = new VaillantApi(this.homey.settings);
+    this.logger = new Logger(this.homey).getLogger();
+    this.logger.info('Zone has been initialized');
+    this.api = new VaillantApi(this.homey.settings, this.logger);
 
     if (await this.isVRC700()) {
       await this.setCapabilityVRC700();
@@ -43,12 +45,12 @@ module.exports = class MyDevice extends Homey.Device {
   }
 
   async onAdded() {
-    this.log('Zone has been added');
+    this.logger.info('Zone has been added');
     await this.updateZone();
   }
 
   async onDeleted() {
-    this.log('Zone has been deleted');
+    this.logger.info('Zone has been deleted');
 
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
@@ -59,7 +61,7 @@ module.exports = class MyDevice extends Homey.Device {
     try {
       const zone = await this.api.getZone(this.getData().systemId, this.getData().zoneId);
 
-      console.log(zone);
+      this.logger.info('Zone updated', {zone: JSON.stringify(zone)});
       await this.setCapabilityValue('measure_temperature', zone.currentRoomTemperature);
       await this.setCapabilityValue('target_temperature', zone.desiredRoomTemperature);
       await this.setCapabilityValue('measure_humidity', zone.currentRoomHumidity);
@@ -69,10 +71,8 @@ module.exports = class MyDevice extends Homey.Device {
       } else {
         await this.setCapabilityValue('heating_mode', zone.heatingMode);
       }
-
-      console.log('Zone updated');
     } catch (err) {
-      this.error('Error while updating system state:', err);
+      this.logger.error('Error while updating system state:', err);
     }
   }
 
@@ -89,7 +89,7 @@ module.exports = class MyDevice extends Homey.Device {
     newSettings,
     changedKeys
   }) {
-    this.log('Zone settings where changed');
+    this.logger.info('Zone settings where changed');
   }
 
   async isVRC700() {

@@ -3,11 +3,13 @@
 const Homey = require('homey');
 const VaillantAuthentication = require('../../lib/vaillant-authentication');
 const VaillantApi = require('../../lib/vaillant-api');
+const Logger = require('../../lib/logger');
 
 module.exports = class MyDriver extends Homey.Driver {
 
   async onInit() {
-    this.log('Initialize authentication');
+    this.logger = new Logger(this.homey).getLogger();
+    this.logger.info('Zone driver has been initialized');
     this.authentication = new VaillantAuthentication(this.homey.settings);
   }
 

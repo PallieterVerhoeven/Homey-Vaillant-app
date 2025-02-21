@@ -14,21 +14,84 @@
          style="width: 100%; max-width: 200px; margin: 0 auto; display: block;">
 </header>
 
-<button id="logout" class="homey-button-danger-shadow">Logout</button>
+<div class="homey-form-group">
+    <h1 class="homey-title">Logging & diagnostics</h1>
+    <ul class="homey-subtitle">
+        <li>App events and errors</li>
+        <li>API calls to Vaillant</li>
+        <li>All data is removed after 14 days</li>
+    </ul>
+
+    <fieldset class="homey-form-checkbox-set">
+        <label class="homey-form-checkbox">
+            <input class="homey-form-checkbox-input" type="checkbox" name="checkbox-logging-enabled"
+                   id="logging-enabled"/>
+            <span class="homey-form-checkbox-checkmark"></span>
+            <span class="homey-form-checkbox-text">Enable logging</span>
+        </label>
+    </fieldset>
+    <div class="homey-form-group" id="logging-id-field">
+        <label class="homey-form-label" for="logging-id">Logging id<br>(you can share this with the developer to
+            identify you're logs)</label>
+        <input class="homey-form-input" id="logging-id" type="text" readonly disabled/>
+    </div>
+</div>
+
+<!--<hr>-->
+<!---->
+<!--<div class="homey-form-group">-->
+<!--    <h1 class="homey-title">Clear app data</h1>-->
+<!--    <ul class="homey-subtitle">-->
+<!--        <li>Remove app settings</li>-->
+<!--        <li>Remove myVaillant access token</li>-->
+<!--    </ul>-->
+
+<!--    <button id="reset" class="homey-button-danger-shadow" style="margin-top: 5px">Clear data</button>-->
+<!--</div>-->
+
 
 <script type="text/javascript">
-  // a method named 'onHomeyReady' must be present in your code
   function onHomeyReady(Homey) {
-    // Tell Homey we're ready to be displayed
     Homey.ready();
 
-    var logoutElement = document.getElementById('logout');
+    var loggingEnabledElement = document.getElementById('logging-enabled');
+    var loggingEnabledFieldElement = document.getElementById('logging-id-field');
+    var loggingIdElement = document.getElementById('logging-id');
 
-    logoutElement.addEventListener('click', function(element) {
-      element.target.classList.add('is-loading');
 
-      Homey.emit('logout');
+    Homey.get('loggingEnabled', function(err, loggingEnabled) {
+      loggingEnabledElement.checked = loggingEnabled;
+
+      if (loggingEnabled) {
+        displayLoggingId(true);
+      } else {
+        displayLoggingId(false);
+      }
     });
+
+    loggingEnabledElement.addEventListener('change', function(element) {
+      Homey.set('loggingEnabled', element.target.checked);
+
+      if (element.target.checked) {
+        displayLoggingId(true);
+      } else {
+        displayLoggingId(false);
+      }
+    });
+
+    Homey.get('loggingId', function(err, loggingId) {
+      loggingIdElement.value = loggingId;
+    });
+  }
+
+  function displayLoggingId(show){
+    var loggingEnabledFieldElement = document.getElementById('logging-id-field');
+
+    if (show) {
+      loggingEnabledFieldElement.style.display = 'block';
+    } else {
+      loggingEnabledFieldElement.style.display = 'none';
+    }
   }
 </script>
 </body>
