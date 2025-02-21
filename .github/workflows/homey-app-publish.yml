@@ -57,6 +57,12 @@ jobs:
     needs: update_version
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures we get all history, including the latest commit
+
+      - name: Pull latest changes
+        run: |
+          git pull origin master
 
       - name: Create env.json
         run: |
@@ -64,7 +70,7 @@ jobs:
             "GRAFANA_LOKI_HOST": "${{ secrets.GRAFANA_LOKI_HOST }}",
             "GRAFANA_LOKI_TOKEN": "${{ secrets.GRAFANA_LOKI_TOKEN }}"
           }' > env.json
-          
+
       - name: Publish Homey App
         uses: athombv/github-action-homey-app-publish@master
         id: publish
