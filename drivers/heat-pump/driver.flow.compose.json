@@ -1,6 +1,13 @@
 {
   "triggers": [
     {
+      "id": "status_changed",
+      "title": {
+        "en": "The status is changed",
+        "nl": "De status is veranderd"
+      }
+    },
+    {
       "id": "water_pressure_changed",
       "title": {
         "en": "The water pressure is changed",
@@ -10,43 +17,43 @@
   ],
   "conditions": [
     {
-      "id": "current_heating_mode",
+      "id": "current_status",
       "title": {
-        "en": "Current heating mode !{{is|isn't}} ...",
-        "nl": "Huidige verwarmingsmodus !{{is|is niet}} ..."
+        "en": "Current status !{{is|isn't}} ...",
+        "nl": "Huidige status !{{is|is niet}} ..."
       },
       "titleFormatted": {
-        "en": "Current heating mode !{{is|isn't}} [[heatingMode]]",
-        "nl": "Huidige verwarmingsmodus !{{is|is niet}} [[heatingMode]]"
+        "en": "Current status !{{is|isn't}} [[status]]",
+        "nl": "Huidige status !{{is|is niet}} [[status]]"
       },
       "args": [
         {
           "type": "dropdown",
-          "name": "heatingMode",
+          "name": "status",
           "title": {
-            "en": "Heating mode",
-            "nl": "Verwarmingsmodus"
+            "en": "Status",
+            "nl": "Status"
           },
           "values": [
             {
               "id": "heating",
               "label": {
                 "en": "Heating",
-                "nl": "Verwarmen"
+                "nl": "Verwarming"
               }
             },
             {
               "id": "hot-water",
               "label": {
                 "en": "Hot water",
-                "nl": "Warm water"
+                "nl": "Warmwater"
               }
             },
             {
               "id": "standby",
               "label": {
                 "en": "standby",
-                "nl": "Standby"
+                "nl": "standby"
               }
             }
           ]

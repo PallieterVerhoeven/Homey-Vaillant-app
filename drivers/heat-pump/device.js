@@ -24,6 +24,12 @@ module.exports = class MyDevice extends Homey.Device {
   }
 
   async triggers() {
+    this.registerCapabilityListener('current_status_changed', async () => {
+      const statusChangedTrigger = this.homey.flow.getTriggerCard('status_changed');
+      await statusChangedTrigger.trigger();
+      console.log('status_changed');
+    });
+
     this.registerCapabilityListener('measure_pressure', async () => {
       const waterPressureChangedTrigger = this.homey.flow.getTriggerCard('water_pressure_changed');
       await waterPressureChangedTrigger.trigger();
@@ -41,10 +47,9 @@ module.exports = class MyDevice extends Homey.Device {
       return args.temperature === this.getCapabilityValue('desired_hot_water_temperature');
     });
 
-    const currenHeatingModeCondition = this.homey.flow.getConditionCard('current_heating_mode');
-    await currenHeatingModeCondition.registerRunListener(async (args) => {
-      // TODO: Should use enum for heatingMode
-      return args.heatingMode === this.getCapabilityValue('status');
+    const currenStatusCondition = this.homey.flow.getConditionCard('current_status');
+    await currenStatusCondition.registerRunListener(async (args) => {
+      return args.status === this.getCapabilityValue('status');
     });
   }
 
