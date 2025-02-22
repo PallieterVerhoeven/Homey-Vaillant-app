@@ -55,5 +55,8 @@
   },
   "1.6.0": {
     "en": "Add system status changed trigger card"
+  },
+  "1.6.1": {
+    "en": "Fix veto temperature not shown"
   }
 }
