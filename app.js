@@ -29,6 +29,11 @@ module.exports = class MyApp extends Homey.App {
       renewIn = this.homey.settings.get('accessTokenExpireAt') - Date.now() - 60000;
     }
 
+    // Add endless loop protection
+    if (renewIn < 30000) {
+      renewIn = 30000;
+    }
+
     setTimeout(() => {
       this.updateAccessToken();
     }, renewIn);
@@ -39,7 +44,7 @@ module.exports = class MyApp extends Homey.App {
     await this.updateAccessToken();
     this.api.getHeatingSystemsList()
       .then((devices) => {
-        if(!devices) {
+        if (!devices) {
           return;
         }
 
