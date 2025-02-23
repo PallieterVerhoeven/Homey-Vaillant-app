@@ -344,7 +344,8 @@
   "drivers": [
     {
       "name": {
-        "en": "Heat Pump"
+        "en": "Heating system",
+        "nl": "Verwarmingssysteem"
       },
       "class": "heatpump",
       "capabilities": [
@@ -398,7 +399,8 @@
     },
     {
       "name": {
-        "en": "Zone"
+        "en": "Zone",
+        "nl": "Zone"
       },
       "class": "thermostat",
       "capabilities": [

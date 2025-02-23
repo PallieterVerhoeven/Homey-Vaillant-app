@@ -27,7 +27,6 @@ module.exports = class MyDevice extends Homey.Device {
     this.registerCapabilityListener('current_status_changed', async () => {
       const statusChangedTrigger = this.homey.flow.getTriggerCard('status_changed');
       await statusChangedTrigger.trigger();
-      console.log('status_changed');
     });
 
     this.registerCapabilityListener('measure_pressure', async () => {
@@ -75,18 +74,18 @@ module.exports = class MyDevice extends Homey.Device {
       const energyUsage = await this.api.getEnergyUsage(this.getData().id);
 
       await this.setCapabilityValue('measure_power', energyUsage);
-    } catch (err) {
-      this.error('Error while updating measure_power:', err);
+    } catch (error) {
+      this.logger.error('Error updating measure_power:', { error: JSON.stringify(error) });
     }
   }
 
   async onAdded() {
-    this.log('Heat-pump has been added');
+    this.logger.info('Heat-pump has been added');
     await this.updateSystem();
   }
 
   async onDeleted() {
-    this.log('Heat-pump has been deleted');
+    this.logger.info('Heat-pump has been deleted');
 
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
@@ -123,7 +122,7 @@ module.exports = class MyDevice extends Homey.Device {
     newSettings,
     changedKeys
   }) {
-    this.log('Heat-pump settings where changed');
+    this.logger.info('Heat-pump settings where changed');
   }
 
   async capabilityMigrations() {

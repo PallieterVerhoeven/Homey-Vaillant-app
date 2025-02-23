@@ -1,6 +1,7 @@
 {
   "name": {
-    "en": "Zone"
+    "en": "Zone",
+    "nl": "Zone"
   },
   "class": "thermostat",
   "capabilities": [

@@ -1,6 +1,7 @@
 {
   "name": {
-    "en": "Heat Pump"
+    "en": "Heating system",
+    "nl": "Verwarmingssysteem"
   },
   "class": "heatpump",
   "capabilities": [

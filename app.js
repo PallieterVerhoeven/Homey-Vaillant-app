@@ -14,18 +14,7 @@ module.exports = class MyApp extends Homey.App {
     this.authentication = new VaillantAuthentication(this.homey.settings, this.logger);
 
     if (this.homey.settings.get('loggingEnabled')) {
-      this.api = new VaillantApi(this.homey.settings, this.logger);
-      await this.updateAccessToken();
-      this.api.getHeatingSystemsList()
-        .then((devices) => {
-          if(!devices) {
-            return;
-          }
-
-          for (const device of devices) {
-            this.api.getSystem(device.id);
-          }
-        });
+      await this.logSystemInformation();
     }
 
     await this.updateAccessToken();
@@ -43,6 +32,21 @@ module.exports = class MyApp extends Homey.App {
     setTimeout(() => {
       this.updateAccessToken();
     }, renewIn);
+  }
+
+  async logSystemInformation() {
+    this.api = new VaillantApi(this.homey.settings, this.logger);
+    await this.updateAccessToken();
+    this.api.getHeatingSystemsList()
+      .then((devices) => {
+        if(!devices) {
+          return;
+        }
+
+        for (const device of devices) {
+          this.api.getSystem(device.id);
+        }
+      });
   }
 
 };
