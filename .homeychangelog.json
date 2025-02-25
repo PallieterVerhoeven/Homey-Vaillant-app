@@ -64,5 +64,8 @@
   },
   "1.6.3": {
     "en": "Fix status compare condition"
+  },
+  "1.6.4": {
+    "en": "Fix set heating mode for vrc700"
   }
 }
