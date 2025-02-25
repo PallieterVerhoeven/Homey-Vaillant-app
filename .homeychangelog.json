@@ -61,5 +61,8 @@
   },
   "1.6.2": {
     "en": "Fix possible endless loop"
+  },
+  "1.6.3": {
+    "en": "Fix status compare condition"
   }
 }
