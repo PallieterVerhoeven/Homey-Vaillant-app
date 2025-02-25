@@ -29,9 +29,29 @@ module.exports = class MyDevice extends Homey.Device {
       await statusChangedTrigger.trigger();
     });
 
-    this.registerCapabilityListener('measure_pressure', async () => {
+    this.registerCapabilityListener('measure_pressure', async (value) => {
       const waterPressureChangedTrigger = this.homey.flow.getTriggerCard('water_pressure_changed');
-      await waterPressureChangedTrigger.trigger();
+      await waterPressureChangedTrigger.trigger(value);
+    });
+
+    this.registerCapabilityListener('current_hot_water_temperature_changed', async (value) => {
+      const currentHotWaterTemperatureChangedTrigger = this.homey.flow.getTriggerCard('current_hot_water_temperature_changed');
+      await currentHotWaterTemperatureChangedTrigger.trigger(value);
+    });
+
+    this.registerCapabilityListener('desired_hot_water_temperature_changed', async (value) => {
+      const desiredHotWaterTemperatureChangedTrigger = this.homey.flow.getTriggerCard('desired_hot_water_temperature_changed');
+      await desiredHotWaterTemperatureChangedTrigger.trigger(value);
+    });
+
+    this.registerCapabilityListener('current_outdoor_temperature_changed', async (value) => {
+      const currentOutdoorTemperatureChangedTrigger = this.homey.flow.getTriggerCard('current_outdoor_temperature_changed');
+      await currentOutdoorTemperatureChangedTrigger.trigger(value);
+    });
+
+    this.registerCapabilityListener('average_outdoor_temperature_changed', async (value) => {
+      const averageOutdoorTemperatureChangedTrigger = this.homey.flow.getTriggerCard('average_outdoor_temperature_changed');
+      await averageOutdoorTemperatureChangedTrigger.trigger(value);
     });
   }
 
@@ -48,7 +68,8 @@ module.exports = class MyDevice extends Homey.Device {
 
     const currenStatusCondition = this.homey.flow.getConditionCard('current_status');
     await currenStatusCondition.registerRunListener(async (args) => {
-      return args.status.toUpperCase() === this.getCapabilityValue('status').toUpperCase();
+      return args.status.toUpperCase() === this.getCapabilityValue('status')
+        .toUpperCase();
     });
   }
 

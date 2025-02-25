@@ -12,7 +12,85 @@
       "title": {
         "en": "The water pressure is changed",
         "nl": "De waterdruk is veranderd"
-      }
+      },
+      "tokens": [
+        {
+          "name": "pressure",
+          "type": "number",
+          "title": {
+            "en": "Water pressure",
+            "nl": "Waterdruk"
+          }
+        }
+      ]
+    },
+    {
+      "id": "current_hot_water_temperature_changed",
+      "title": {
+        "en": "The hot water temperature is changed",
+        "nl": "De warm water temperatuur is veranderd"
+      },
+      "tokens": [
+        {
+          "name": "temperature",
+          "type": "number",
+          "title": {
+            "en": "Current hot water temperature",
+            "nl": "Huidige warmwater temperatuur"
+          }
+        }
+      ]
+    },
+    {
+      "id": "desired_hot_water_temperature_changed",
+      "title": {
+        "en": "The desired hot water temperature is changed",
+        "nl": "De gewenste warm water temperatuur is veranderd"
+      },
+      "tokens": [
+        {
+          "name": "temperature",
+          "type": "number",
+          "title": {
+            "en": "Desired hot water temperature",
+            "nl": "Gewenste warmwater temperatuur"
+          }
+        }
+      ]
+    },
+    {
+      "id": "current_outdoor_temperature_changed",
+      "title": {
+        "en": "The outdoor temperature is changed",
+        "nl": "De buitentemperatuur is veranderd"
+      },
+      "tokens": [
+        {
+          "name": "temperature",
+          "type": "number",
+          "title": {
+            "en": "Current outdoor temperature",
+            "nl": "Huidige buitentemperatuur"
+          }
+        }
+      ]
+    },
+    {
+      "id": "average_outdoor_temperature_changed",
+      "title": {
+        "en": "The average outdoor temperature is changed",
+        "nl": "De gemiddelde buitentemperatuur is veranderd"
+      },
+      "tokens": [
+        {
+          "name": "temperature",
+          "type": "number",
+          "title": {
+            "en": "Average outdoor temperature",
+            "nl": "Gemiddelde buitentemperatuur"
+          }
+        }
+      ]
     }
   ],
   "conditions": [
