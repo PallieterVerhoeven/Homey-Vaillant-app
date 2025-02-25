@@ -48,7 +48,7 @@ module.exports = class MyDevice extends Homey.Device {
 
     const currenStatusCondition = this.homey.flow.getConditionCard('current_status');
     await currenStatusCondition.registerRunListener(async (args) => {
-      return args.status === this.getCapabilityValue('status');
+      return args.status.toUpperCase() === this.getCapabilityValue('status').toUpperCase();
     });
   }
 
