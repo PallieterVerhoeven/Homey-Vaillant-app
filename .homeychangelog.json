@@ -67,5 +67,8 @@
   },
   "1.6.4": {
     "en": "Fix set heating mode for vrc700"
+  },
+  "1.7.0": {
+    "en": "Add temperature trigger cards"
   }
 }
