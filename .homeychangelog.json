@@ -70,5 +70,8 @@
   },
   "1.7.0": {
     "en": "Add temperature trigger cards"
+  },
+  "1.7.1": {
+    "en": "Fix enable logging crash"
   }
 }
