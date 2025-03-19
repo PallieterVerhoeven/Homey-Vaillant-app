@@ -457,6 +457,7 @@
       "capabilities": [
         "status",
         "measure_power",
+        "meter_power",
         "current_outdoor_temperature",
         "average_outdoor_temperature",
         "current_hot_water_temperature",

@@ -14,7 +14,7 @@ module.exports = class MyDevice extends Homey.Device {
     await this.capabilityMigrations();
 
     this.updateInterval = setInterval(() => {
-      this.updateMeasurePower();
+      this.updatePowerUsage();
       this.updateSystem();
     }, 60000); // 60 seconds
 
@@ -90,14 +90,23 @@ module.exports = class MyDevice extends Homey.Device {
     });
   }
 
-  async updateMeasurePower() {
+  async updatePowerUsage() {
     try {
       const energyUsage = await this.api.getEnergyUsage(this.getData().id);
 
       await this.setCapabilityValue('measure_power', energyUsage);
+
+      let meterPower = await this.getStoreValue('meter_power') || 0;
+      meterPower += this.convertWattToKwh(energyUsage);
+      await this.setStoreValue('meter_power', meterPower);
+      await this.setCapabilityValue('meter_power', meterPower);
     } catch (error) {
       this.logger.error('Error updating measure_power:', { error: JSON.stringify(error) });
     }
+  }
+
+  convertWattToKwh(value) {
+    return value / 60000;
   }
 
   async onAdded() {
@@ -147,7 +156,9 @@ module.exports = class MyDevice extends Homey.Device {
   }
 
   async capabilityMigrations() {
-
+    if (!this.hasCapability('meter_power')) {
+      await this.addCapability('meter_power');
+    }
   }
 
 };
