@@ -204,6 +204,13 @@
             },
             "values": [
               {
+                "id": "hot-water",
+                "label": {
+                  "en": "Hot water",
+                  "nl": "Warmwater"
+                }
+              },
+              {
                 "id": "heating",
                 "label": {
                   "en": "Heating",
@@ -211,10 +218,10 @@
                 }
               },
               {
-                "id": "hot-water",
+                "id": "cooling",
                 "label": {
-                  "en": "Hot water",
-                  "nl": "Warmwater"
+                  "en": "Cooling",
+                  "nl": "koelen"
                 }
               },
               {
