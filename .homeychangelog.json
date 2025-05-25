@@ -76,5 +76,8 @@
   },
   "1.7.2": {
     "en": "Fix application crash"
+  },
+  "1.7.3": {
+    "en": "Fix invalid access token"
   }
 }
