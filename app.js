@@ -13,18 +13,18 @@ module.exports = class MyApp extends Homey.App {
 
     this.authentication = new VaillantAuthentication(this.homey.settings, this.logger);
 
+    await this.updateAccessToken(true);
+
     if (this.homey.settings.get('loggingEnabled')) {
       await this.logSystemInformation();
     }
-
-    await this.updateAccessToken();
   }
 
-  async updateAccessToken() {
+  async updateAccessToken(forceNewToken = false) {
     this.logger.info('Update access token');
     let renewIn = 300000; // 5 minutes
 
-    if (this.authentication.isLoggedIn()) {
+    if (this.authentication.isLoggedIn() || forceNewToken) {
       await this.authentication.renewToken(this.homey.settings.get('country'));
       renewIn = this.homey.settings.get('accessTokenExpireAt') - Date.now() - 60000;
     }
@@ -41,7 +41,6 @@ module.exports = class MyApp extends Homey.App {
 
   async logSystemInformation() {
     this.api = new VaillantApi(this.homey.settings, this.logger);
-    await this.updateAccessToken();
     this.api.getHeatingSystemsList()
       .then((devices) => {
         if (!devices) {
