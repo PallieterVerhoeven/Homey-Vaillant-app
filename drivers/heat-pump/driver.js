@@ -40,7 +40,8 @@ module.exports = class MyDriver extends Homey.Driver {
     });
 
     session.setHandler('list_devices', async () => {
-      const api = new VaillantApi(this.homey.settings, this.logger);
+      const authentication = new VaillantAuthentication(this.homey.settings, this.logger);
+      const api = new VaillantApi(this.homey.settings, this.logger, authentication);
       const devices = await api.getHeatingSystemsList();
 
       return await Promise.all(

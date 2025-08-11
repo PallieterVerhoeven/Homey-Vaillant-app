@@ -3,13 +3,15 @@
 const Homey = require('homey');
 const VaillantApi = require('../../lib/vaillant-api');
 const Logger = require('../../lib/logger');
+const VaillantAuthentication = require('../../lib/vaillant-authentication');
 
 module.exports = class MyDevice extends Homey.Device {
 
   async onInit() {
     this.logger = new Logger(this.homey).getLogger();
     this.logger.info('Heat-pump has been initialized');
-    this.api = new VaillantApi(this.homey.settings, this.logger);
+    const authentication = new VaillantAuthentication(this.homey.settings, this.logger);
+    this.api = new VaillantApi(this.homey.settings, this.logger, authentication);
 
     await this.capabilityMigrations();
 
