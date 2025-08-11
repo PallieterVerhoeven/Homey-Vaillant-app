@@ -11,7 +11,7 @@ module.exports = class MyApp extends Homey.App {
     this.logger = new Logger(this.homey).getLogger();
     this.logger.info('Initialize App');
 
-    this.authentication = new VaillantAuthentication(this.homey.settings, this.logger);
+    this.authentication = VaillantAuthentication.getInstance(this.homey.settings, this.logger);
     await this.authentication.renewToken(this.homey.settings.get('country'));
 
     if (this.homey.settings.get('loggingEnabled')) {

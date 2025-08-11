@@ -10,12 +10,10 @@ module.exports = class MyDriver extends Homey.Driver {
   async onInit() {
     this.logger = new Logger(this.homey).getLogger();
     this.logger.info('Zone driver has been initialized');
-    this.authentication = new VaillantAuthentication(this.homey.settings, this.logger);
+    this.authentication = VaillantAuthentication.getInstance(this.homey.settings, this.logger);
   }
 
   async onPair(session) {
-    this.authentication = new VaillantAuthentication(this.homey.settings, this.logger);
-
     session.setHandler('showView', async (viewId) => {
       if (viewId === 'login' && this.authentication.isLoggedIn()) {
         await session.showView('list_devices');
@@ -38,7 +36,7 @@ module.exports = class MyDriver extends Homey.Driver {
     });
 
     session.setHandler('list_devices', async () => {
-      const authentication = new VaillantAuthentication(this.homey.settings, this.logger);
+      const authentication = VaillantAuthentication.getInstance(this.homey.settings, this.logger);
       const api = new VaillantApi(this.homey.settings, this.logger, authentication);
       const devices = await api.getHeatingSystemsList();
 
@@ -66,7 +64,7 @@ module.exports = class MyDriver extends Homey.Driver {
   async onRepair(session, device) {
     // Argument session is a PairSocket, similar to Driver.onPair
     // Argument device is a Homey.Device that's being repaired
-    this.authentication = new VaillantAuthentication(this.homey.settings, this.logger);
+    this.authentication = VaillantAuthentication.getInstance(this.homey.settings, this.logger);
 
     session.setHandler('login', async (data) => {
       await this.authentication.login(

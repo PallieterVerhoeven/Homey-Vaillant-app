@@ -9,7 +9,7 @@ module.exports = class MyDevice extends Homey.Device {
   async onInit() {
     this.logger = new Logger(this.homey).getLogger();
     this.logger.info('Zone has been initialized');
-    const authentication = new VaillantAuthentication(this.homey.settings, this.logger);
+    const authentication = VaillantAuthentication.getInstance(this.homey.settings, this.logger);
     this.api = new VaillantApi(this.homey.settings, this.logger, authentication);
 
     if (await this.isVRC700()) {
