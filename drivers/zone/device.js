@@ -131,7 +131,7 @@ module.exports = class MyDevice extends Homey.Device {
         await this.setCapabilityValue('heating_mode', zone.heatingMode);
       }
     } catch (error) {
-      this.logger.error('Error updating capabilities', { error: JSON.stringify(error) });
+      this.logger.error('Error updating capabilities', { error: error.message || error });
     }
   }
 

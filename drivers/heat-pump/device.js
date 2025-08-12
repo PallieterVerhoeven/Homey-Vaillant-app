@@ -103,7 +103,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setStoreValue('meter_power', meterPower);
       await this.setCapabilityValue('meter_power', meterPower);
     } catch (error) {
-      this.logger.error('Error updating measure_power:', { error: JSON.stringify(error) });
+      this.logger.error('Error updating measure_power:', { error: error.message || error });
     }
   }
 
@@ -137,7 +137,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setCapabilityValue('desired_hot_water_temperature', system.hotWaterTemperatureDesired);
       await this.setCapabilityValue('alarm_tank_empty', system.hotWaterTemperatureCurrent && system.hotWaterTemperatureCurrent < 38);
     } catch (error) {
-      this.logger.error('Error updating capabilities', { error: JSON.stringify(error) });
+      this.logger.error('Error updating capabilities', { error: error.message || error });
     }
   }
 
