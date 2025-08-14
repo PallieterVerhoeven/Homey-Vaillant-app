@@ -82,5 +82,8 @@
   },
   "1.7.4": {
     "en": "Fix token renew"
+  },
+  "1.7.5": {
+    "en": "Fix logging exception messages"
   }
 }
