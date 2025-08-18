@@ -85,5 +85,8 @@
   },
   "1.7.5": {
     "en": "Fix logging exception messages"
+  },
+  "1.7.6": {
+    "en": "Fix zone temp when there is no active program"
   }
 }
