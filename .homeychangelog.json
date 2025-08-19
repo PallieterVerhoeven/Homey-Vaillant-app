@@ -88,5 +88,8 @@
   },
   "1.7.6": {
     "en": "Fix zone temp when there is no active program"
+  },
+  "1.7.7": {
+    "en": "Fix desired temp mapping"
   }
 }
