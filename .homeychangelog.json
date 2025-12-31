@@ -91,5 +91,8 @@
   },
   "1.7.7": {
     "en": "Fix desired temp mapping"
+  },
+  "1.7.8": {
+    "en": "Change translations hot water"
   }
 }
