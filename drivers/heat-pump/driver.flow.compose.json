@@ -28,7 +28,7 @@
       "id": "current_hot_water_temperature_changed",
       "title": {
         "en": "The hot water temperature is changed",
-        "nl": "De warm water temperatuur is veranderd"
+        "nl": "De tap water temperatuur is veranderd"
       },
       "tokens": [
         {
@@ -36,7 +36,7 @@
           "type": "number",
           "title": {
             "en": "Current hot water temperature",
-            "nl": "Huidige warmwater temperatuur"
+            "nl": "Huidige tap water temperatuur"
           }
         }
       ]
@@ -45,7 +45,7 @@
       "id": "desired_hot_water_temperature_changed",
       "title": {
         "en": "The desired hot water temperature is changed",
-        "nl": "De gewenste warm water temperatuur is veranderd"
+        "nl": "De gewenste tap water temperatuur is veranderd"
       },
       "tokens": [
         {
@@ -53,7 +53,7 @@
           "type": "number",
           "title": {
             "en": "Desired hot water temperature",
-            "nl": "Gewenste warmwater temperatuur"
+            "nl": "Gewenste tap water temperatuur"
           }
         }
       ]
@@ -150,11 +150,11 @@
       "highlight": true,
       "title": {
         "en": "The desired hot water temperature !{{is|is not}}",
-        "nl": "De gewenste warm water temperatuur !{{is|is niet}}"
+        "nl": "De gewenste tap water temperatuur !{{is|is niet}}"
       },
       "titleFormatted": {
         "en": "The desired hot water temperature is [[temperature]]°C",
-        "nl": "De gewenste warm water temperatuur is [[temperature]]°C"
+        "nl": "De gewenste tap water temperatuur is [[temperature]]°C"
       },
       "args": [
         {
@@ -191,29 +191,29 @@
       "id": "start_hot_water_boost",
       "title": {
         "en": "Start hot water boost",
-        "nl": "Start warm water boost"
+        "nl": "Start tap water boost"
       }
     },
     {
       "id": "stop_hot_water_boost",
       "title": {
         "en": "Stop hot water boost",
-        "nl": "Stop warm water boost"
+        "nl": "Stop tap water boost"
       }
     },
     {
       "id": "set_hot_water_temperature",
       "title": {
         "en": "set hot water",
-        "nl": "stel warm water in"
+        "nl": "stel tap water in"
       },
       "titleFormatted": {
         "en": "Set hot water temperature to [[temperature]]°C",
-        "nl": "Stel warm water in op [[temperature]]°C"
+        "nl": "Stel tap water in op [[temperature]]°C"
       },
       "hint": {
         "en": "Set desired hot water temperature",
-        "nl": "Stel gewenste warm water temperatuur in"
+        "nl": "Stel gewenste tap water temperatuur in"
       },
       "highlight": true,
       "args": [
