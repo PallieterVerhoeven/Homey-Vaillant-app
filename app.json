@@ -470,7 +470,6 @@
         "current_hot_water_temperature",
         "desired_hot_water_temperature",
         "current_flow_temperature",
-        "alarm_tank_empty",
         "water_pressure"
       ],
       "capabilitiesOptions": {
