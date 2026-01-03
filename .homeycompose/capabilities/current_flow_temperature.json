@@ -2,7 +2,7 @@
   "type": "number",
   "title": {
     "en": "Current flow temperature",
-    "nl": "Huidige stroomtemperatuur"
+    "nl": "Huidige aanvoertemperatuur"
   },
   "icon": "/assets/temperature.svg",
   "uiComponent": "sensor",

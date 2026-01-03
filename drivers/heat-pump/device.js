@@ -14,6 +14,7 @@ module.exports = class MyDevice extends Homey.Device {
     this.api = new VaillantApi(this.homey.settings, this.logger, authentication);
 
     await this.capabilityMigrations();
+    await this.removeObsoleteCapabilities();
 
     this.updateInterval = setInterval(() => {
       this.updatePowerUsage();
@@ -163,6 +164,12 @@ module.exports = class MyDevice extends Homey.Device {
     }
     if (!this.hasCapability('current_flow_temperature')) {
       await this.addCapability('current_flow_temperature');
+    }
+  }
+
+  async removeObsoleteCapabilities() {
+    if (this.hasCapability('alarm_tank_empty')) {
+      await this.removeCapability('alarm_tank_empty');
     }
   }
 
