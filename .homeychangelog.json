@@ -94,5 +94,8 @@
   },
   "1.7.8": {
     "en": "Change translations hot water"
+  },
+  "2.0.0": {
+    "en": "Add flow temperature and remove empty tank sensor"
   }
 }
