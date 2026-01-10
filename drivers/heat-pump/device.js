@@ -13,8 +13,7 @@ module.exports = class MyDevice extends Homey.Device {
     const authentication = VaillantAuthentication.getInstance(this.homey.settings, this.logger);
     this.api = new VaillantApi(this.homey.settings, this.logger, authentication);
 
-    await this.capabilityMigrations();
-    await this.removeObsoleteCapabilities();
+    await this.setCapabilities();
 
     this.updateInterval = setInterval(() => {
       this.updatePowerUsage();
@@ -158,19 +157,27 @@ module.exports = class MyDevice extends Homey.Device {
     this.logger.info('Heat-pump settings where changed');
   }
 
-  async capabilityMigrations() {
-    if (!this.hasCapability('meter_power')) {
-      await this.addCapability('meter_power');
-    }
-    if (!this.hasCapability('current_flow_temperature')) {
-      await this.addCapability('current_flow_temperature');
-    }
-  }
+  async setCapabilities() {
+    await this.removeCapability('status');
+    await this.removeCapability('water_pressure');
+    await this.removeCapability('measure_power');
+    await this.removeCapability('meter_power');
+    await this.removeCapability('current_outdoor_temperature');
+    await this.removeCapability('average_outdoor_temperature');
+    await this.removeCapability('current_hot_water_temperature');
+    await this.removeCapability('desired_hot_water_temperature');
+    await this.removeCapability('current_flow_temperature');
+    await this.removeCapability('alarm_tank_empty'); // deprecated
 
-  async removeObsoleteCapabilities() {
-    if (this.hasCapability('alarm_tank_empty')) {
-      await this.removeCapability('alarm_tank_empty');
-    }
+    await this.addCapability('status');
+    await this.addCapability('water_pressure');
+    await this.addCapability('measure_power');
+    await this.addCapability('meter_power');
+    await this.addCapability('current_outdoor_temperature');
+    await this.addCapability('average_outdoor_temperature');
+    await this.addCapability('current_hot_water_temperature');
+    await this.addCapability('desired_hot_water_temperature');
+    await this.addCapability('current_flow_temperature');
   }
 
 };
