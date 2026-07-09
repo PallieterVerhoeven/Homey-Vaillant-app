@@ -97,5 +97,8 @@
   },
   "2.0.0": {
     "en": "Add flow temperature and remove empty tank sensor"
+  },
+  "2.0.1": {
+    "en": "2.0.1"
   }
 }
