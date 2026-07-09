@@ -118,5 +118,8 @@
   },
   "2.0.7": {
     "en": "Fix broken repair login flow"
+  },
+  "2.0.8": {
+    "en": "Fix renew token without logged in session"
   }
 }
