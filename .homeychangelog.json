@@ -106,5 +106,8 @@
   },
   "2.0.3": {
     "en": "Add auth abstraction"
+  },
+  "2.0.4": {
+    "en": "Fix device not recovering from unavailable status"
   }
 }
