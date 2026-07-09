@@ -109,5 +109,8 @@
   },
   "2.0.4": {
     "en": "Fix device not recovering from unavailable status"
+  },
+  "2.0.5": {
+    "en": "Fix cookie isolation for each login"
   }
 }
