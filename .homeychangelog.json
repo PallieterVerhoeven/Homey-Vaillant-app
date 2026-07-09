@@ -112,5 +112,8 @@
   },
   "2.0.5": {
     "en": "Fix cookie isolation for each login"
+  },
+  "2.0.6": {
+    "en": "Fix recover from unavailable state"
   }
 }
