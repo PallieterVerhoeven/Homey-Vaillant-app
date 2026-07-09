@@ -103,5 +103,8 @@
   },
   "2.0.2": {
     "en": "Add detection invalid api session"
+  },
+  "2.0.3": {
+    "en": "Add auth abstraction"
   }
 }
