@@ -4,6 +4,7 @@ const Homey = require('homey');
 const VaillantApi = require('../../lib/vaillant-api');
 const Logger = require('../../lib/logger');
 const VaillantAuthentication = require('../../lib/vaillant-authentication');
+const { ReauthenticationRequiredError } = require('../../lib/vaillant-authentication');
 
 module.exports = class MyDevice extends Homey.Device {
 
@@ -13,6 +14,7 @@ module.exports = class MyDevice extends Homey.Device {
     const authentication = VaillantAuthentication.getInstance(this.homey.settings, this.logger);
     this.api = new VaillantApi(this.homey.settings, this.logger, authentication);
 
+    await this.setAvailable();
     await this.setCapabilities();
 
     this.updateInterval = setInterval(() => {
@@ -78,17 +80,38 @@ module.exports = class MyDevice extends Homey.Device {
   async actions() {
     const startHotWaterBoostAction = this.homey.flow.getActionCard('start_hot_water_boost');
     startHotWaterBoostAction.registerRunListener(async (args) => {
-      await this.api.setHotWaterBoost(this.getData().id, true);
+      try {
+        await this.api.setHotWaterBoost(this.getData().id, true);
+      } catch (error) {
+        if (error instanceof ReauthenticationRequiredError) {
+          await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        }
+        throw error;
+      }
     });
 
     const stopHotWaterBoostAction = this.homey.flow.getActionCard('stop_hot_water_boost');
     stopHotWaterBoostAction.registerRunListener(async (args) => {
-      await this.api.setHotWaterBoost(this.getData().id, false);
+      try {
+        await this.api.setHotWaterBoost(this.getData().id, false);
+      } catch (error) {
+        if (error instanceof ReauthenticationRequiredError) {
+          await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        }
+        throw error;
+      }
     });
 
     const setHotWaterTemperature = this.homey.flow.getActionCard('set_hot_water_temperature');
     setHotWaterTemperature.registerRunListener(async (args) => {
-      await this.api.setHotWaterTemperature(this.getData().id, args.temperature);
+      try {
+        await this.api.setHotWaterTemperature(this.getData().id, args.temperature);
+      } catch (error) {
+        if (error instanceof ReauthenticationRequiredError) {
+          await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        }
+        throw error;
+      }
     });
   }
 
@@ -103,6 +126,10 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setStoreValue('meter_power', meterPower);
       await this.setCapabilityValue('meter_power', meterPower);
     } catch (error) {
+      if (error instanceof ReauthenticationRequiredError) {
+        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        return;
+      }
       this.logger.error('Error updating measure_power:', { error: error.message || error });
     }
   }
@@ -137,6 +164,10 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setCapabilityValue('desired_hot_water_temperature', system.hotWaterTemperatureDesired);
        await this.setCapabilityValue('current_flow_temperature', system.flowTemperature);
     } catch (error) {
+      if (error instanceof ReauthenticationRequiredError) {
+        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        return;
+      }
       this.logger.error('Error updating capabilities', { error: error.message || error });
     }
   }
