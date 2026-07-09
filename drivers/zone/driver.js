@@ -74,6 +74,7 @@ module.exports = class MyDriver extends Homey.Driver {
 
       if (this.authentication.isLoggedIn()) {
         await session.done();
+        await device.setAvailable();
       }
 
       return false;

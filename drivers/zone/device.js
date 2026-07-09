@@ -164,6 +164,7 @@ module.exports = class MyDevice extends Homey.Device {
       } else {
         await this.setCapabilityValue('heating_mode', zone.heatingMode);
       }
+      await this.setAvailable();
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
         await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');

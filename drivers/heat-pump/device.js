@@ -123,6 +123,7 @@ module.exports = class MyDevice extends Homey.Device {
       meterPower += this.convertWattToKwh(energyUsage);
       await this.setStoreValue('meter_power', meterPower);
       await this.setCapabilityValue('meter_power', meterPower);
+      await this.setAvailable();
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
         await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
@@ -161,6 +162,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setCapabilityValue('current_hot_water_temperature', system.hotWaterTemperatureCurrent);
       await this.setCapabilityValue('desired_hot_water_temperature', system.hotWaterTemperatureDesired);
        await this.setCapabilityValue('current_flow_temperature', system.flowTemperature);
+       await this.setAvailable();
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
         await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
