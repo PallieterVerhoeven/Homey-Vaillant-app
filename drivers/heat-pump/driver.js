@@ -1,7 +1,6 @@
 'use strict';
 
 const Homey = require('homey');
-const VaillantAuthentication = require('../../lib/vaillant-authentication');
 const VaillantApi = require('../../lib/vaillant-api');
 const Logger = require('../../lib/logger');
 
@@ -16,7 +15,7 @@ module.exports = class MyDriver extends Homey.Driver {
   }
 
   async onPair(session) {
-    this.authentication = VaillantAuthentication.getInstance(this.homey.settings, this.logger);
+    this.authentication = this.homey.app.authentication;
 
     session.setHandler('showView', async (viewId) => {
       if (viewId === 'login' && this.authentication.isLoggedIn()) {
@@ -40,8 +39,7 @@ module.exports = class MyDriver extends Homey.Driver {
     });
 
     session.setHandler('list_devices', async () => {
-      const authentication = VaillantAuthentication.getInstance(this.homey.settings, this.logger);
-      const api = new VaillantApi(this.homey.settings, this.logger, authentication);
+      const api = new VaillantApi(this.homey.settings, this.logger, this.authentication);
       const devices = await api.getHeatingSystemsList();
 
       return await Promise.all(
@@ -62,7 +60,7 @@ module.exports = class MyDriver extends Homey.Driver {
   async onRepair(session, device) {
     // Argument session is a PairSocket, similar to Driver.onPair
     // Argument device is a Homey.Device that's being repaired
-    this.authentication = VaillantAuthentication.getInstance(this.homey.settings, this.logger);
+    this.authentication = this.homey.app.authentication;
 
     session.setHandler('login', async (data) => {
       await this.authentication.login(

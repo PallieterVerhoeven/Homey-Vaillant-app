@@ -3,15 +3,13 @@
 const Homey = require('homey');
 const VaillantApi = require('../../lib/vaillant-api');
 const Logger = require('../../lib/logger');
-const VaillantAuthentication = require('../../lib/vaillant-authentication');
 const { ReauthenticationRequiredError } = require('../../lib/vaillant-authentication');
 
 module.exports = class MyDevice extends Homey.Device {
   async onInit() {
     this.logger = new Logger(this.homey).getLogger();
     this.logger.info('Zone has been initialized');
-    const authentication = VaillantAuthentication.getInstance(this.homey.settings, this.logger);
-    this.api = new VaillantApi(this.homey.settings, this.logger, authentication);
+    this.api = new VaillantApi(this.homey.settings, this.logger, this.homey.app.authentication);
 
     await this.setAvailable();
 
