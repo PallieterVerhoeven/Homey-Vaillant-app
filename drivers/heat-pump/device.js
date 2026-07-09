@@ -15,9 +15,9 @@ module.exports = class MyDevice extends Homey.Device {
     await this.setAvailable();
     await this.setCapabilities();
 
-    this.updateInterval = setInterval(() => {
-      this.updatePowerUsage();
-      this.updateSystem();
+    this.updateInterval = setInterval(async () => {
+      await this.updatePowerUsage();
+      await this.updateSystem();
     }, 60000); // 60 seconds
 
     await this.triggers();
@@ -123,12 +123,7 @@ module.exports = class MyDevice extends Homey.Device {
       meterPower += this.convertWattToKwh(energyUsage);
       await this.setStoreValue('meter_power', meterPower);
       await this.setCapabilityValue('meter_power', meterPower);
-      await this.setAvailable();
     } catch (error) {
-      if (error instanceof ReauthenticationRequiredError) {
-        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
-        return;
-      }
       this.logger.error('Error updating measure_power:', { error: error.message || error });
     }
   }
@@ -161,14 +156,15 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setCapabilityValue('average_outdoor_temperature', system.outdoorTemperatureAverage24h);
       await this.setCapabilityValue('current_hot_water_temperature', system.hotWaterTemperatureCurrent);
       await this.setCapabilityValue('desired_hot_water_temperature', system.hotWaterTemperatureDesired);
-       await this.setCapabilityValue('current_flow_temperature', system.flowTemperature);
-       await this.setAvailable();
+      await this.setCapabilityValue('current_flow_temperature', system.flowTemperature);
+      await this.setAvailable();
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
         await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
         return;
       }
       this.logger.error('Error updating capabilities', { error: error.message || error });
+      await this.setAvailable();
     }
   }
 

@@ -48,8 +48,8 @@ module.exports = class MyDevice extends Homey.Device {
     await this.conditions();
     await this.action();
 
-    this.updateInterval = setInterval(() => {
-      this.updateZone();
+    this.updateInterval = setInterval(async () => {
+      await this.updateZone();
     }, 60000); // 60 seconds
   }
 
@@ -171,6 +171,7 @@ module.exports = class MyDevice extends Homey.Device {
         return;
       }
       this.logger.error('Error updating capabilities', { error: error.message || error });
+      await this.setAvailable();
     }
   }
 
