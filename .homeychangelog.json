@@ -100,8 +100,5 @@
   },
   "2.0.1": {
     "en": "Fix myVaillant api authentication"
-  },
-  "2.0.2": {
-    "en": "Add detection invalid api session"
   }
 }
