@@ -44,97 +44,80 @@ module.exports = class MyDevice extends Homey.Device {
       }, 5000);
     });
 
-    await this.triggers();
-    await this.conditions();
-    await this.action();
-
     this.updateInterval = setInterval(async () => {
       await this.updateZone();
     }, 60000); // 60 seconds
   }
 
-  async triggers() {
-
+  async setQuickVeto(temperature, durationInHours) {
+    try {
+      await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, temperature, durationInHours);
+    } catch (error) {
+      if (error instanceof ReauthenticationRequiredError) {
+        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+      }
+      throw error;
+    }
   }
 
-  async conditions() {
-
+  async cancelQuickVeto() {
+    try {
+      await this.api.cancelQuickVeto(this.getData().systemId, this.getData().zoneId);
+    } catch (error) {
+      if (error instanceof ReauthenticationRequiredError) {
+        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+      }
+      throw error;
+    }
   }
 
-  async action() {
-    const setTemperatureVetoForDurationAction = this.homey.flow.getActionCard('set_temperature_veto_for_duration');
-    setTemperatureVetoForDurationAction.registerRunListener(async (args) => {
-      try {
-        await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, args.temperature, args.durationInHours);
-      } catch (error) {
-        if (error instanceof ReauthenticationRequiredError) {
-          await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
-        }
-        throw error;
+  async setHeatingMode(modeId) {
+    try {
+      await this.api.setHeatingMode(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, modeId);
+    } catch (error) {
+      if (error instanceof ReauthenticationRequiredError) {
+        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
       }
-    });
+      throw error;
+    }
+  }
 
-    const cancelTemperatureVetoAction = this.homey.flow.getActionCard('cancel_temperature_veto');
-    cancelTemperatureVetoAction.registerRunListener(async () => {
-      try {
-        await this.api.cancelQuickVeto(this.getData().systemId, this.getData().zoneId);
-      } catch (error) {
-        if (error instanceof ReauthenticationRequiredError) {
-          await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
-        }
-        throw error;
-      }
-    });
+  getHeatingModeOptions(query) {
+    const options = [];
 
-    const setHeatingModeAction = this.homey.flow.getActionCard('set_heating_mode');
-    setHeatingModeAction.registerRunListener(async (args) => {
-      try {
-        await this.api.setHeatingMode(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, args.heatingMode.id);
-      } catch (error) {
-        if (error instanceof ReauthenticationRequiredError) {
-          await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
-        }
-        throw error;
-      }
-    });
-    setHeatingModeAction.registerArgumentAutocompleteListener(
-      'heatingMode',
-      async (query, args) => {
-        const options = [];
+    if (this.getData().controlIdentifier === 'vrc700') {
+      options.push(
+        {
+          id: 'AUTO',
+          name: 'Auto',
+        },
+        {
+          id: 'DAY',
+          name: 'Day',
+        },
+        {
+          id: 'SET_BACK',
+          name: 'Set Back',
+        },
+      );
+    } else {
+      options.push(
+        {
+          id: 'MANUAL',
+          name: 'Manual',
+        },
+        {
+          id: 'TIME_CONTROLLED',
+          name: 'Time Controlled',
+        },
+        {
+          id: 'OFF',
+          name: 'Off',
+        },
+      );
+    }
 
-        if (this.getData().controlIdentifier === 'vrc700') {
-          options.push({
-              id: 'AUTO',
-              name: 'Auto',
-            },
-            {
-              id: 'DAY',
-              name: 'Day',
-            },
-            {
-              id: 'SET_BACK',
-              name: 'Set Back',
-            });
-        } else {
-          options.push({
-              id: 'MANUAL',
-              name: 'Manual',
-            },
-            {
-              id: 'TIME_CONTROLLED',
-              name: 'Time Controlled',
-            },
-            {
-              id: 'OFF',
-              name: 'Off',
-            });
-        }
-
-        return options.filter((option) => {
-          return option.name.toLowerCase().includes(query.toLowerCase());
-        });
-      }
-    );
+    return options.filter((option) => option.name.toLowerCase().includes(query.toLowerCase()));
   }
 
   async onAdded() {

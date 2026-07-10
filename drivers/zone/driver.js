@@ -9,6 +9,24 @@ module.exports = class MyDriver extends Homey.Driver {
   async onInit() {
     this.logger = new Logger(this.homey).getLogger();
     this.logger.info('Zone driver has been initialized');
+
+    const setTemperatureVetoForDurationAction = this.homey.flow.getActionCard('set_temperature_veto_for_duration');
+    setTemperatureVetoForDurationAction.registerRunListener(async (args) => {
+      await args.device.setQuickVeto(args.temperature, args.durationInHours);
+    });
+
+    const cancelTemperatureVetoAction = this.homey.flow.getActionCard('cancel_temperature_veto');
+    cancelTemperatureVetoAction.registerRunListener(async (args) => {
+      await args.device.cancelQuickVeto();
+    });
+
+    const setHeatingModeAction = this.homey.flow.getActionCard('set_heating_mode');
+    setHeatingModeAction.registerRunListener(async (args) => {
+      await args.device.setHeatingMode(args.heatingMode.id);
+    });
+    setHeatingModeAction.registerArgumentAutocompleteListener('heatingMode', async (query, args) => {
+      return args.device.getHeatingModeOptions(query);
+    });
   }
 
   async onPair(session) {
