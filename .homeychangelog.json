@@ -121,5 +121,8 @@
   },
   "2.0.8": {
     "en": "Fix renew token without logged in session"
+  },
+  "2.0.9": {
+    "en": "Fix ALTCHA proof on login"
   }
 }
