@@ -12,6 +12,31 @@ module.exports = class MyDriver extends Homey.Driver {
   async onInit() {
     this.logger = new Logger(this.homey).getLogger();
     this.logger.info('Heat-pump driver has been initialized');
+
+    const desiredHotWaterTemperatureCondition = this.homey.flow.getConditionCard('desired_hot_water_temperature');
+    await desiredHotWaterTemperatureCondition.registerRunListener(async (args) => {
+      return args.device.isDesiredHotWaterTemperature(args.temperature);
+    });
+
+    const currentStatusCondition = this.homey.flow.getConditionCard('current_status');
+    await currentStatusCondition.registerRunListener(async (args) => {
+      return args.device.isCurrentStatus(args.status);
+    });
+
+    const startHotWaterBoostAction = this.homey.flow.getActionCard('start_hot_water_boost');
+    startHotWaterBoostAction.registerRunListener(async (args) => {
+      await args.device.startHotWaterBoost();
+    });
+
+    const stopHotWaterBoostAction = this.homey.flow.getActionCard('stop_hot_water_boost');
+    stopHotWaterBoostAction.registerRunListener(async (args) => {
+      await args.device.stopHotWaterBoost();
+    });
+
+    const setHotWaterTemperatureAction = this.homey.flow.getActionCard('set_hot_water_temperature');
+    setHotWaterTemperatureAction.registerRunListener(async (args) => {
+      await args.device.setHotWaterTemperature(args.temperature);
+    });
   }
 
   async onPair(session) {
