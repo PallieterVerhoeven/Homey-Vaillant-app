@@ -124,5 +124,8 @@
   },
   "2.0.9": {
     "en": "Fix ALTCHA proof on login"
+  },
+  "2.1.0": {
+    "en": "Add cooling mode selection for zones, Fix updating wrong zone, Fix VRC700/SCF compatibility and load device data immediately on init"
   }
 }
