@@ -34,10 +34,21 @@ jobs:
         env:
           CHANGELOG_INPUT: ${{ inputs.changelog }}
         run: |
-          formatted=$(echo "$CHANGELOG_INPUT" | tr ',' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | sed 's/^/- /')
+          items=$(printf '%s\n' "$CHANGELOG_INPUT" | tr ',' '\n' | sed 's/^[[:space:]]*-[[:space:]]*//;s/^[[:space:]]*//;s/[[:space:]]*$//')
+          items=$(printf '%s\n' "$items" | sed '/^[[:space:]]*$/d')
+
+          bullet=$(printf '%s\n' "$items" | sed 's/^/- /')
+          inline=$(printf '%s\n' "$items" | paste -sd ',' - | sed 's/,/, /g')
+
           {
-            echo 'changelog<<EOF'
-            echo "$formatted"
+            echo 'bullet<<EOF'
+            printf '%s\n' "$bullet"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+          {
+            echo 'inline<<EOF'
+            printf '%s\n' "$inline"
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
@@ -46,13 +57,13 @@ jobs:
         id: update_app_version
         with:
           version: ${{ inputs.version }}
-          changelog: ${{ steps.format_changelog.outputs.changelog }}
+          changelog: ${{ steps.format_changelog.outputs.inline }}
 
       - name: Commit & Push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ github.token }}
-          RELEASE_NOTES: ${{ steps.format_changelog.outputs.changelog }}
+          RELEASE_NOTES: ${{ steps.format_changelog.outputs.bullet }}
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
