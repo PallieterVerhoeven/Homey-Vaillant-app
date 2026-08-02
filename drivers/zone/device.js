@@ -161,9 +161,14 @@ module.exports = class MyDevice extends Homey.Device {
 
   async updateCapabilityValues(zone) {
     this.logger.info('Zone updated', { zone: JSON.stringify(zone) });
-    await this.setCapabilityValue('measure_temperature', zone.currentRoomTemperature);
+
+    if (this.hasCapability('measure_temperature')) {
+      await this.setCapabilityValue('measure_temperature', zone.currentRoomTemperature);
+    }
     await this.setCapabilityValue('target_temperature', zone.desiredRoomTemperature);
-    await this.setCapabilityValue('measure_humidity', zone.currentRoomHumidity);
+    if (this.hasCapability('measure_humidity')) {
+      await this.setCapabilityValue('measure_humidity', zone.currentRoomHumidity);
+    }
     await this.setCapabilityValue(this.getHeatingModeCapability(), zone.heatingMode);
 
     if (this.hasCapability(this.getCoolingModeCapability())) {
@@ -181,10 +186,16 @@ module.exports = class MyDevice extends Homey.Device {
     await this.removeCapability('cooling_mode');
     await this.removeCapability('cooling_mode_vrc700');
 
-    await this.addCapability('measure_humidity');
     await this.addCapability('target_temperature');
-    await this.addCapability('measure_temperature');
     await this.addCapability(this.getHeatingModeCapability());
+
+    if (zone.currentRoomTemperature != null) {
+      await this.addCapability('measure_temperature');
+    }
+
+    if (zone.currentRoomHumidity != null) {
+      await this.addCapability('measure_humidity');
+    }
 
     if (zone.isCoolingAllowed) {
       await this.addCapability(this.getCoolingModeCapability());
