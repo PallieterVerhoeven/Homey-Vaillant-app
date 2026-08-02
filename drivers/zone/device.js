@@ -13,9 +13,13 @@ module.exports = class MyDevice extends Homey.Device {
 
     await this.setAvailable();
 
-    if (await this.isVRC700()) {
-      await this.setCapabilityVRC700();
-    }
+    const zone = await this.api.getZone(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier);
+    await this.setCapabilities(zone);
+    await this.updateCapabilityValues(zone);
+
+    this.updateInterval = setInterval(async () => {
+      await this.updateZone();
+    }, 60000); // 60 seconds
 
     this.registerCapabilityListener('target_temperature', async (targetTemperature) => {
       try {
@@ -39,16 +43,29 @@ module.exports = class MyDevice extends Homey.Device {
         throw error;
       }
       setTimeout(() => {
-        // Delay because the API needs some time to update the zone
-        this.updateZone();
+        this.updateZone()
+          .catch((updateError) => {
+            this.logger.error('Error updating zone after heating mode change', { error: updateError.message || updateError });
+          });
       }, 5000);
     });
 
-    this.updateInterval = setInterval(async () => {
-      await this.updateZone();
-    }, 60000); // 60 seconds
-
-    await this.updateZone();
+    this.registerMultipleCapabilityListener(['cooling_mode', 'cooling_mode_vrc700'], async (operationMode) => {
+      try {
+        await this.api.setCoolingMode(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, Object.values(operationMode)[0]);
+      } catch (error) {
+        if (error instanceof ReauthenticationRequiredError) {
+          await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        }
+        throw error;
+      }
+      setTimeout(() => {
+        this.updateZone()
+          .catch((updateError) => {
+            this.logger.error('Error updating zone after cooling mode change', { error: updateError.message || updateError });
+          });
+      }, 5000);
+    });
   }
 
   async setQuickVeto(temperature, durationInHours) {
@@ -84,42 +101,35 @@ module.exports = class MyDevice extends Homey.Device {
     }
   }
 
-  getHeatingModeOptions(query) {
-    const options = [];
-
-    if (this.getData().controlIdentifier === 'vrc700') {
-      options.push(
-        {
-          id: 'AUTO',
-          name: 'Auto',
-        },
-        {
-          id: 'DAY',
-          name: 'Day',
-        },
-        {
-          id: 'SET_BACK',
-          name: 'Set Back',
-        },
-      );
-    } else {
-      options.push(
-        {
-          id: 'MANUAL',
-          name: 'Manual',
-        },
-        {
-          id: 'TIME_CONTROLLED',
-          name: 'Time Controlled',
-        },
-        {
-          id: 'OFF',
-          name: 'Off',
-        },
-      );
+  async setCoolingMode(modeId) {
+    try {
+      await this.api.setCoolingMode(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, modeId);
+    } catch (error) {
+      if (error instanceof ReauthenticationRequiredError) {
+        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+      }
+      throw error;
     }
+  }
+
+  getHeatingModeOptions(query) {
+    const options = this.isVRC700()
+      ? [
+        { id: 'AUTO', name: 'Auto' },
+        { id: 'DAY', name: 'Day' },
+        { id: 'SET_BACK', name: 'Set Back' },
+      ]
+      : [
+        { id: 'MANUAL', name: 'Manual' },
+        { id: 'TIME_CONTROLLED', name: 'Time Controlled' },
+        { id: 'OFF', name: 'Off' },
+      ];
 
     return options.filter((option) => option.name.toLowerCase().includes(query.toLowerCase()));
+  }
+
+  getCoolingModeOptions(query) {
+    return this.getHeatingModeOptions(query);
   }
 
   async onAdded() {
@@ -138,18 +148,7 @@ module.exports = class MyDevice extends Homey.Device {
   async updateZone() {
     try {
       const zone = await this.api.getZone(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier);
-
-      this.logger.info('Zone updated', { zone: JSON.stringify(zone) });
-      await this.setCapabilityValue('measure_temperature', zone.currentRoomTemperature);
-      await this.setCapabilityValue('target_temperature', zone.desiredRoomTemperature);
-      await this.setCapabilityValue('measure_humidity', zone.currentRoomHumidity);
-
-      if (this.hasCapability('heating_mode_vrc700')) {
-        await this.setCapabilityValue('heating_mode_vrc700', zone.heatingMode);
-      } else {
-        await this.setCapabilityValue('heating_mode', zone.heatingMode);
-      }
-      await this.setAvailable();
+      await this.updateCapabilityValues(zone);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
         await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
@@ -158,6 +157,50 @@ module.exports = class MyDevice extends Homey.Device {
       this.logger.error('Error updating capabilities', { error: error.message || error });
       await this.setAvailable();
     }
+  }
+
+  async updateCapabilityValues(zone) {
+    this.logger.info('Zone updated', { zone: JSON.stringify(zone) });
+    await this.setCapabilityValue('measure_temperature', zone.currentRoomTemperature);
+    await this.setCapabilityValue('target_temperature', zone.desiredRoomTemperature);
+    await this.setCapabilityValue('measure_humidity', zone.currentRoomHumidity);
+    await this.setCapabilityValue(this.getHeatingModeCapability(), zone.heatingMode);
+
+    if (this.hasCapability(this.getCoolingModeCapability())) {
+      await this.setCapabilityValue(this.getCoolingModeCapability(), zone.coolingMode);
+    }
+    await this.setAvailable();
+  }
+
+  async setCapabilities(zone) {
+    await this.removeCapability('measure_humidity');
+    await this.removeCapability('target_temperature');
+    await this.removeCapability('measure_temperature');
+    await this.removeCapability('heating_mode');
+    await this.removeCapability('heating_mode_vrc700');
+    await this.removeCapability('cooling_mode');
+    await this.removeCapability('cooling_mode_vrc700');
+
+    await this.addCapability('measure_humidity');
+    await this.addCapability('target_temperature');
+    await this.addCapability('measure_temperature');
+    await this.addCapability(this.getHeatingModeCapability());
+
+    if (zone.isCoolingAllowed) {
+      await this.addCapability(this.getCoolingModeCapability());
+    }
+  }
+
+  isVRC700() {
+    return this.getData().controlIdentifier === 'vrc700';
+  }
+
+  getHeatingModeCapability() {
+    return this.isVRC700() ? 'heating_mode_vrc700' : 'heating_mode';
+  }
+
+  getCoolingModeCapability() {
+    return this.isVRC700() ? 'cooling_mode_vrc700' : 'cooling_mode';
   }
 
   /**
@@ -175,16 +218,4 @@ module.exports = class MyDevice extends Homey.Device {
   }) {
     this.logger.info('Zone settings where changed');
   }
-
-  async isVRC700() {
-    return this.getData().controlIdentifier === 'vrc700';
-  }
-
-  async setCapabilityVRC700() {
-    if (this.hasCapability('heating_mode')) {
-      await this.removeCapability('heating_mode');
-      await this.addCapability('heating_mode_vrc700');
-    }
-  }
-
 };

@@ -76,6 +76,31 @@
       ]
     },
     {
+      "id": "set_cooling_mode",
+      "title": {
+        "en": "Set cooling mode to ...",
+        "nl": "Stel koelmodus in op ..."
+      },
+      "titleFormatted": {
+        "en": "Set cooling mode to [[coolingMode]]",
+        "nl": "Stel koelmodus in op [[coolingMode]]"
+      },
+      "args": [
+        {
+          "type": "autocomplete",
+          "name": "coolingMode",
+          "title": {
+            "en": "Mode",
+            "nl": "Modus"
+          },
+          "placeholder": {
+            "en": "Auto",
+            "nl": "Auto"
+          }
+        }
+      ]
+    },
+    {
       "id": "cancel_temperature_veto",
       "title": {
         "en": "Cancel manual temperature",
