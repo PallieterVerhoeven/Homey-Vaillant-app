@@ -13,7 +13,7 @@ on:
           - patch
       changelog:
         type: string
-        description: Changelog
+        description: 'Changelog entries, comma-separated, e.g. "fix bug a, add feature b"'
         required: true
 
 # Needed in order to push the commit, create a release, and publish the app
@@ -29,14 +29,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Format changelog
+        id: format_changelog
+        env:
+          CHANGELOG_INPUT: ${{ inputs.changelog }}
+        run: |
+          formatted=$(echo "$CHANGELOG_INPUT" | tr ',' '\n' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//' | sed 's/^/- /')
+          {
+            echo 'changelog<<EOF'
+            echo "$formatted"
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
       - name: Update Homey App Version
         uses: athombv/github-action-homey-app-version@master
         id: update_app_version
         with:
           version: ${{ inputs.version }}
-          changelog: ${{ inputs.changelog }}
+          changelog: ${{ steps.format_changelog.outputs.changelog }}
 
       - name: Commit & Push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_NOTES: ${{ steps.format_changelog.outputs.changelog }}
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -46,10 +62,8 @@ jobs:
           git tag "v${{ steps.update_app_version.outputs.version }}"
 
           git push origin HEAD --tags
-          gh release create "v${{ steps.update_app_version.outputs.version }}" -t "v${{ steps.update_app_version.outputs.version }}" --notes "" --generate-notes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ github.token }}
+          printf '%s\n' "$RELEASE_NOTES" > release_notes.md
+          gh release create "v${{ steps.update_app_version.outputs.version }}" -t "v${{ steps.update_app_version.outputs.version }}" --notes-file release_notes.md
 
   publish:
     name: Publish Homey App
