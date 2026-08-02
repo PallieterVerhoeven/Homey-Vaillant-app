@@ -27,6 +27,14 @@ module.exports = class MyDriver extends Homey.Driver {
     setHeatingModeAction.registerArgumentAutocompleteListener('heatingMode', async (query, args) => {
       return args.device.getHeatingModeOptions(query);
     });
+
+    const setCoolingModeAction = this.homey.flow.getActionCard('set_cooling_mode');
+    setCoolingModeAction.registerRunListener(async (args) => {
+      await args.device.setCoolingMode(args.coolingMode.id);
+    });
+    setCoolingModeAction.registerArgumentAutocompleteListener('coolingMode', async (query, args) => {
+      return args.device.getCoolingModeOptions(query);
+    });
   }
 
   async onPair(session) {
@@ -68,6 +76,7 @@ module.exports = class MyDriver extends Homey.Driver {
               zoneId: zone.index,
               systemId: device.id,
               controlIdentifier,
+              isCoolingAllowed: zone.isCoolingAllowed,
             },
             settings: {},
           }));
