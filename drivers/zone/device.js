@@ -19,7 +19,7 @@ module.exports = class MyDevice extends Homey.Device {
 
     this.registerCapabilityListener('target_temperature', async (targetTemperature) => {
       try {
-        await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, targetTemperature, 3);
+        await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, targetTemperature, 3);
         await this.setCapabilityValue('target_temperature', targetTemperature);
       } catch (error) {
         if (error instanceof ReauthenticationRequiredError) {
@@ -47,11 +47,13 @@ module.exports = class MyDevice extends Homey.Device {
     this.updateInterval = setInterval(async () => {
       await this.updateZone();
     }, 60000); // 60 seconds
+
+    await this.updateZone();
   }
 
   async setQuickVeto(temperature, durationInHours) {
     try {
-      await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, temperature, durationInHours);
+      await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, temperature, durationInHours);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
         await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
@@ -62,7 +64,7 @@ module.exports = class MyDevice extends Homey.Device {
 
   async cancelQuickVeto() {
     try {
-      await this.api.cancelQuickVeto(this.getData().systemId, this.getData().zoneId);
+      await this.api.cancelQuickVeto(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
         await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
@@ -135,7 +137,7 @@ module.exports = class MyDevice extends Homey.Device {
 
   async updateZone() {
     try {
-      const zone = await this.api.getZone(this.getData().systemId, this.getData().zoneId);
+      const zone = await this.api.getZone(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier);
 
       this.logger.info('Zone updated', { zone: JSON.stringify(zone) });
       await this.setCapabilityValue('measure_temperature', zone.currentRoomTemperature);
@@ -169,7 +171,7 @@ module.exports = class MyDevice extends Homey.Device {
   async onSettings({
     oldSettings,
     newSettings,
-    changedKeys
+    changedKeys,
   }) {
     this.logger.info('Zone settings where changed');
   }

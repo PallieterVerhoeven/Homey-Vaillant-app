@@ -20,6 +20,9 @@ module.exports = class MyDevice extends Homey.Device {
       await this.updateSystem();
     }, 60000); // 60 seconds
 
+    await this.updatePowerUsage();
+    await this.updateSystem();
+
     await this.triggers();
   }
 
@@ -57,7 +60,7 @@ module.exports = class MyDevice extends Homey.Device {
 
   async startHotWaterBoost() {
     try {
-      await this.api.setHotWaterBoost(this.getData().id, true);
+      await this.api.setHotWaterBoost(this.getData().id, true, this.getData().controlIdentifier);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
         await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
@@ -68,7 +71,7 @@ module.exports = class MyDevice extends Homey.Device {
 
   async stopHotWaterBoost() {
     try {
-      await this.api.setHotWaterBoost(this.getData().id, false);
+      await this.api.setHotWaterBoost(this.getData().id, false, this.getData().controlIdentifier);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
         await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
@@ -79,7 +82,7 @@ module.exports = class MyDevice extends Homey.Device {
 
   async setHotWaterTemperature(temperature) {
     try {
-      await this.api.setHotWaterTemperature(this.getData().id, temperature);
+      await this.api.setHotWaterTemperature(this.getData().id, temperature, this.getData().controlIdentifier);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
         await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
@@ -130,7 +133,7 @@ module.exports = class MyDevice extends Homey.Device {
 
   async updateSystem() {
     try {
-      const system = await this.api.getSystem(this.getData().id);
+      const system = await this.api.getSystem(this.getData().id, this.getData().controlIdentifier);
 
       this.logger.info('System updated', { system: JSON.stringify(system) });
       await this.setCapabilityValue('status', system.status);
@@ -162,7 +165,7 @@ module.exports = class MyDevice extends Homey.Device {
   async onSettings({
     oldSettings,
     newSettings,
-    changedKeys
+    changedKeys,
   }) {
     this.logger.info('Heat-pump settings where changed');
   }

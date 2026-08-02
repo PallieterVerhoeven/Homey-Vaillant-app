@@ -41,7 +41,8 @@ module.exports = class MyApp extends Homey.App {
       }
 
       for (const device of devices) {
-        await this.api.getSystem(device.id);
+        const controlIdentifier = await this.api.getSystemIdentifier(device.id);
+        await this.api.getSystem(device.id, controlIdentifier);
       }
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
