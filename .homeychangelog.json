@@ -127,5 +127,8 @@
   },
   "2.1.0": {
     "en": "Add cooling mode selection for zones, Fix updating wrong zone, Fix VRC700/SCF compatibility and load device data immediately on init"
+  },
+  "2.1.1": {
+    "en": "Fix vrc700 parsing data with missing room temp"
   }
 }
