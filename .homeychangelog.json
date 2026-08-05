@@ -130,5 +130,8 @@
   },
   "2.1.1": {
     "en": "Fix vrc700 parsing data with missing room temp"
+  },
+  "2.1.2": {
+    "en": "Add missing off state vrc700"
   }
 }
