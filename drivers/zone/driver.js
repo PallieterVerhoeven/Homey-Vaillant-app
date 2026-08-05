@@ -76,7 +76,7 @@ module.exports = class MyDriver extends Homey.Driver {
               zoneId: zone.index,
               systemId: device.id,
               controlIdentifier,
-              isCoolingAllowed: zone.isCoolingAllowed,
+              isCoolingEnabled: zone.isCoolingEnabled,
             },
             settings: {},
           }));

@@ -118,6 +118,7 @@ module.exports = class MyDevice extends Homey.Device {
         { id: 'AUTO', name: 'Auto' },
         { id: 'DAY', name: 'Day' },
         { id: 'SET_BACK', name: 'Set Back' },
+        { id: 'OFF', name: 'Off' },
       ]
       : [
         { id: 'MANUAL', name: 'Manual' },
@@ -197,7 +198,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.addCapability('measure_humidity');
     }
 
-    if (zone.isCoolingAllowed) {
+    if (zone.isCoolingEnabled) {
       await this.addCapability(this.getCoolingModeCapability());
     }
   }
