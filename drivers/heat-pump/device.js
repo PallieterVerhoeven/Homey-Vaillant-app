@@ -22,40 +22,6 @@ module.exports = class MyDevice extends Homey.Device {
 
     await this.updatePowerUsage();
     await this.updateSystem();
-
-    await this.triggers();
-  }
-
-  async triggers() {
-    this.registerCapabilityListener('current_status_changed', async () => {
-      const statusChangedTrigger = this.homey.flow.getTriggerCard('status_changed');
-      await statusChangedTrigger.trigger();
-    });
-
-    this.registerCapabilityListener('measure_pressure', async (value) => {
-      const waterPressureChangedTrigger = this.homey.flow.getTriggerCard('water_pressure_changed');
-      await waterPressureChangedTrigger.trigger(value);
-    });
-
-    this.registerCapabilityListener('current_hot_water_temperature_changed', async (value) => {
-      const currentHotWaterTemperatureChangedTrigger = this.homey.flow.getTriggerCard('current_hot_water_temperature_changed');
-      await currentHotWaterTemperatureChangedTrigger.trigger(value);
-    });
-
-    this.registerCapabilityListener('desired_hot_water_temperature_changed', async (value) => {
-      const desiredHotWaterTemperatureChangedTrigger = this.homey.flow.getTriggerCard('desired_hot_water_temperature_changed');
-      await desiredHotWaterTemperatureChangedTrigger.trigger(value);
-    });
-
-    this.registerCapabilityListener('current_outdoor_temperature_changed', async (value) => {
-      const currentOutdoorTemperatureChangedTrigger = this.homey.flow.getTriggerCard('current_outdoor_temperature_changed');
-      await currentOutdoorTemperatureChangedTrigger.trigger(value);
-    });
-
-    this.registerCapabilityListener('average_outdoor_temperature_changed', async (value) => {
-      const averageOutdoorTemperatureChangedTrigger = this.homey.flow.getTriggerCard('average_outdoor_temperature_changed');
-      await averageOutdoorTemperatureChangedTrigger.trigger(value);
-    });
   }
 
   async startHotWaterBoost() {
@@ -131,17 +97,57 @@ module.exports = class MyDevice extends Homey.Device {
     }
   }
 
+  async updateCapabilityAndTriggerIfChanged(capability, newValue, triggerId, tokens) {
+    const oldValue = this.getCapabilityValue(capability);
+    await this.setCapabilityValue(capability, newValue);
+
+    if (oldValue !== null && oldValue !== undefined && oldValue !== newValue) {
+      const trigger = this.homey.flow.getTriggerCard(triggerId);
+      await trigger.trigger(this, tokens);
+    }
+  }
+
   async updateSystem() {
     try {
       const system = await this.api.getSystem(this.getData().id, this.getData().controlIdentifier);
 
       this.logger.info('System updated', { system: JSON.stringify(system) });
-      await this.setCapabilityValue('status', system.status);
-      await this.setCapabilityValue('water_pressure', system.waterPressure);
-      await this.setCapabilityValue('current_outdoor_temperature', system.outdoorTemperature);
-      await this.setCapabilityValue('average_outdoor_temperature', system.outdoorTemperatureAverage24h);
-      await this.setCapabilityValue('current_hot_water_temperature', system.hotWaterTemperatureCurrent);
-      await this.setCapabilityValue('desired_hot_water_temperature', system.hotWaterTemperatureDesired);
+      await this.updateCapabilityAndTriggerIfChanged(
+        'status',
+        system.status,
+        'status_changed',
+        null,
+      );
+      await this.updateCapabilityAndTriggerIfChanged(
+        'water_pressure',
+        system.waterPressure,
+        'water_pressure_changed',
+        { pressure: system.waterPressure },
+      );
+      await this.updateCapabilityAndTriggerIfChanged(
+        'current_outdoor_temperature',
+        system.outdoorTemperature,
+        'current_outdoor_temperature_changed',
+        { temperature: system.outdoorTemperature },
+      );
+      await this.updateCapabilityAndTriggerIfChanged(
+        'average_outdoor_temperature',
+        system.outdoorTemperatureAverage24h,
+        'average_outdoor_temperature_changed',
+        { temperature: system.outdoorTemperatureAverage24h },
+      );
+      await this.updateCapabilityAndTriggerIfChanged(
+        'current_hot_water_temperature',
+        system.hotWaterTemperatureCurrent,
+        'current_hot_water_temperature_changed',
+        { temperature: system.hotWaterTemperatureCurrent },
+      );
+      await this.updateCapabilityAndTriggerIfChanged(
+        'desired_hot_water_temperature',
+        system.hotWaterTemperatureDesired,
+        'desired_hot_water_temperature_changed',
+        { temperature: system.hotWaterTemperatureDesired },
+      );
       await this.setCapabilityValue('current_flow_temperature', system.flowTemperature);
       await this.setAvailable();
     } catch (error) {
