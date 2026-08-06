@@ -133,5 +133,8 @@
   },
   "2.1.2": {
     "en": "Add missing off state vrc700"
+  },
+  "2.1.3": {
+    "en": "Fix triggering heatpump changes"
   }
 }
