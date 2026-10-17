@@ -4,53 +4,19 @@
 </head>
 <body>
 <header class="homey-header">
-    <img src="../../../assets/images/vaillant-logo.png" alt="Vaillant"
+    <img src="../../../assets/images/vaillant-logo.png" alt="Vaillant" id="logo"
          style="width: 100%; max-width: 200px; margin: 0 auto; display: block;">
 </header>
 
 <fieldset class="homey-form-fieldset">
-    <legend class="homey-form-legend">Login with your myVaillant account</legend>
+    <legend class="homey-form-legend" id="legend">Login with your myVAILLANT account</legend>
+    <p class="homey-subtitle" id="provider-hint">
+        Provider can be changed in the app settings (Vaillant or Saunier Duval).
+    </p>
 
     <div class="homey-form-group">
         <label class="homey-form-label" for="country">Select your country</label>
-        <select class="homey-form-select" name="country" id="country">
-            <option value="albania">Albania</option>
-            <option value="austria">Austria</option>
-            <option value="belgium">Belgium</option>
-            <option value="bulgaria">Bulgaria</option>
-            <option value="croatia">Croatia</option>
-            <option value="cyprus">Cyprus</option>
-            <option value="czechrepublic">Czechia</option>
-            <option value="denmark">Denmark</option>
-            <option value="estonia">Estonia</option>
-            <option value="finland">Finland</option>
-            <option value="france">France</option>
-            <option value="georgia">Georgia</option>
-            <option value="germany">Germany</option>
-            <option value="greece">Greece</option>
-            <option value="hungary">Hungary</option>
-            <option value="ireland">Ireland</option>
-            <option value="italy">Italy</option>
-            <option value="kosovo">Kosovo</option>
-            <option value="latvia">Latvia</option>
-            <option value="lithuania">Lithuania</option>
-            <option value="luxembourg">Luxembourg</option>
-            <option value="netherlands">Netherlands</option>
-            <option value="norway">Norway</option>
-            <option value="poland">Poland</option>
-            <option value="portugal">Portugal</option>
-            <option value="romania">Romania</option>
-            <option value="serbia">Serbia</option>
-            <option value="slovakia">Slovakia</option>
-            <option value="slovenia">Slovenia</option>
-            <option value="spain">Spain</option>
-            <option value="sweden">Sweden</option>
-            <option value="switzerland">Switzerland</option>
-            <option value="turkiye">Turkey</option>
-            <option value="ukraine">Ukraine</option>
-            <option value="unitedkingdom">United Kingdom</option>
-            <option value="uzbekistan">Uzbekistan</option>
-        </select>
+        <select class="homey-form-select" name="country" id="country"></select>
     </div>
     <div class="homey-form-group">
         <label class="homey-form-label" for="username">Email</label>
@@ -62,19 +28,69 @@
     </div>
 </fieldset>
 
-<button type="button" id="save" class="homey-button-primary-full">Login</button>
+<button type="button" id="save" class="homey-button-primary-full" disabled>Login</button>
 
 <script type="text/javascript">
+  var legendElement = document.getElementById('legend');
+  var logoElement = document.getElementById('logo');
   var countryElement = document.getElementById('country');
   var usernameElement = document.getElementById('username');
   var passwordElement = document.getElementById('password');
   var saveElement = document.getElementById('save');
+  var providerName = 'Vaillant';
+  var providerAppName = 'myVAILLANT';
 
-  saveElement.addEventListener('click', function(element) {
-    element.target.classList.add('is-loading');
-    countryElement.disabled = true;
-    usernameElement.disabled = true;
-    passwordElement.disabled = true;
+  Homey.emit('getProvider')
+    .then(function(provider) {
+      providerName = provider.name;
+      providerAppName = provider.appName;
+      legendElement.textContent = 'Login with your ' + provider.appName + ' (' + provider.name + ') account';
+      logoElement.alt = provider.name;
+      if (provider.id !== 'vaillant') {
+        logoElement.style.display = 'none';
+      }
+
+      var placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Select your country';
+      placeholder.disabled = true;
+      placeholder.selected = true;
+      countryElement.appendChild(placeholder);
+
+      provider.countries.forEach(function(country) {
+        var option = document.createElement('option');
+        option.value = country.id;
+        option.textContent = country.name;
+        if (country.id === provider.country) {
+          option.selected = true;
+        }
+        countryElement.appendChild(option);
+      });
+
+      saveElement.disabled = false;
+    })
+    .catch(function(error) {
+      Homey.alert('Could not load provider: ' + (error && error.message ? error.message : error));
+    });
+
+  function setFormEnabled(enabled) {
+    if (enabled) {
+      saveElement.classList.remove('is-loading');
+    } else {
+      saveElement.classList.add('is-loading');
+    }
+    saveElement.disabled = !enabled;
+    countryElement.disabled = !enabled;
+    usernameElement.disabled = !enabled;
+    passwordElement.disabled = !enabled;
+  }
+
+  saveElement.addEventListener('click', function() {
+    if (!countryElement.value) {
+      return Homey.alert('Please select your country.');
+    }
+
+    setFormEnabled(false);
 
     Homey.emit('login', {
       country: countryElement.value,
@@ -83,12 +99,13 @@
     })
       .then(function(isLoggedIn) {
         if (isLoggedIn === false) {
-          element.target.classList.remove('is-loading');
-          countryElement.disabled = false;
-          usernameElement.disabled = false;
-          passwordElement.disabled = false;
-          return Homey.alert('Failed to login myVaillant account, check your credentials and country.');
+          setFormEnabled(true);
+          return Homey.alert('Failed to login to your ' + providerAppName + ' (' + providerName + ') account, check your credentials, country and the provider selected in the app settings.');
         }
+      })
+      .catch(function(error) {
+        setFormEnabled(true);
+        Homey.alert('Login failed: ' + (error && error.message ? error.message : error));
       });
   });
 </script>

@@ -13,13 +13,14 @@ module.exports = class MyDevice extends Homey.Device {
 
     await this.setAvailable();
 
-    const zone = await this.api.getZone(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier);
-    await this.setCapabilities(zone);
-    await this.updateCapabilityValues(zone);
-
+    // Start polling before the first fetch, so the zone recovers after a repair even when the
+    // session is missing at startup (e.g. after a provider switch).
+    this.capabilitiesInitialized = false;
     this.updateInterval = setInterval(async () => {
       await this.updateZone();
     }, 60000); // 60 seconds
+
+    await this.updateZone();
 
     this.registerCapabilityListener('target_temperature', async (targetTemperature) => {
       try {
@@ -27,7 +28,7 @@ module.exports = class MyDevice extends Homey.Device {
         await this.setCapabilityValue('target_temperature', targetTemperature);
       } catch (error) {
         if (error instanceof ReauthenticationRequiredError) {
-          await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+          await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
         }
         throw error;
       }
@@ -38,7 +39,7 @@ module.exports = class MyDevice extends Homey.Device {
         await this.api.setHeatingMode(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, Object.values(operationMode)[0]);
       } catch (error) {
         if (error instanceof ReauthenticationRequiredError) {
-          await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+          await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
         }
         throw error;
       }
@@ -55,7 +56,7 @@ module.exports = class MyDevice extends Homey.Device {
         await this.api.setCoolingMode(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, Object.values(operationMode)[0]);
       } catch (error) {
         if (error instanceof ReauthenticationRequiredError) {
-          await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+          await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
         }
         throw error;
       }
@@ -73,7 +74,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.api.setQuickVeto(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, temperature, durationInHours);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
-        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
       }
       throw error;
     }
@@ -84,7 +85,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.api.cancelQuickVeto(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
-        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
       }
       throw error;
     }
@@ -95,7 +96,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.api.setHeatingMode(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, modeId);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
-        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
       }
       throw error;
     }
@@ -106,7 +107,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.api.setCoolingMode(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier, modeId);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
-        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
       }
       throw error;
     }
@@ -149,10 +150,14 @@ module.exports = class MyDevice extends Homey.Device {
   async updateZone() {
     try {
       const zone = await this.api.getZone(this.getData().systemId, this.getData().zoneId, this.getData().controlIdentifier);
+      if (!this.capabilitiesInitialized) {
+        await this.setCapabilities(zone);
+        this.capabilitiesInitialized = true;
+      }
       await this.updateCapabilityValues(zone);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
-        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
         return;
       }
       this.logger.error('Error updating capabilities', { error: error.message || error });

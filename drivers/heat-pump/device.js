@@ -29,7 +29,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.api.setHotWaterBoost(this.getData().id, true, this.getData().controlIdentifier);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
-        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
       }
       throw error;
     }
@@ -40,7 +40,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.api.setHotWaterBoost(this.getData().id, false, this.getData().controlIdentifier);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
-        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
       }
       throw error;
     }
@@ -51,7 +51,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.api.setHotWaterTemperature(this.getData().id, temperature, this.getData().controlIdentifier);
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
-        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
       }
       throw error;
     }
@@ -152,7 +152,7 @@ module.exports = class MyDevice extends Homey.Device {
       await this.setAvailable();
     } catch (error) {
       if (error instanceof ReauthenticationRequiredError) {
-        await this.setUnavailable('Vaillant session expired. Please repair the device to log in again.');
+        await this.setUnavailable('Session expired or provider changed. Please repair the device to log in again.');
         return;
       }
       this.logger.error('Error updating capabilities', { error: error.message || error });

@@ -37,6 +37,21 @@ module.exports = class MyDriver extends Homey.Driver {
     });
   }
 
+  getProvider() {
+    const {
+      id, name, appName, countries,
+    } = this.homey.app.authentication.getSelectedBrand();
+    return {
+      id,
+      name,
+      appName,
+      countries: Object.entries(countries)
+        .map(([countryId, countryName]) => ({ id: countryId, name: countryName }))
+        .sort((a, b) => a.name.localeCompare(b.name)),
+      country: this.homey.settings.get('country'),
+    };
+  }
+
   async onPair(session) {
     this.authentication = this.homey.app.authentication;
 
@@ -45,6 +60,8 @@ module.exports = class MyDriver extends Homey.Driver {
         await session.showView('list_devices');
       }
     });
+
+    session.setHandler('getProvider', async () => this.getProvider());
 
     session.setHandler('login', async (data) => {
       await this.authentication.login(
@@ -92,6 +109,8 @@ module.exports = class MyDriver extends Homey.Driver {
     // Argument device is a Homey.Device that's being repaired
     this.authentication = this.homey.app.authentication;
 
+    session.setHandler('getProvider', async () => this.getProvider());
+
     session.setHandler('login', async (data) => {
       await this.authentication.login(
         data.country,
@@ -101,7 +120,7 @@ module.exports = class MyDriver extends Homey.Driver {
 
       if (this.authentication.isLoggedIn()) {
         await session.done();
-        await device.setAvailable();
+        await this.homey.app.setAllDevicesAvailable();
         return true;
       }
 

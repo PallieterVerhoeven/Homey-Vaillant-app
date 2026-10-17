@@ -25,6 +25,20 @@
 </header>
 
 <div class="homey-form-group">
+    <h1 class="homey-title">Provider</h1>
+    <p class="homey-subtitle">Select the brand of the app you use to log in to your installation.</p>
+
+    <label class="homey-form-label" for="brand">Provider</label>
+    <select class="homey-form-select" name="brand" id="brand">
+        <option value="vaillant">Vaillant (myVAILLANT)</option>
+        <option value="sdbg">Saunier Duval (MiGo Link)</option>
+    </select>
+</div>
+<div class="warning" id="brand-warning">
+    ⚠️ <strong>Warning:</strong> Your devices are logged in with another provider. Repair them to log in with the selected provider.
+</div>
+
+<div class="homey-form-group">
     <h1 class="homey-title">Logging & diagnostics</h1>
     <ul class="homey-subtitle">
         <li>App events and errors</li>
@@ -56,6 +70,27 @@
 
     var loggingEnabledElement = document.getElementById('logging-enabled');
     var loggingIdElement = document.getElementById('logging-id');
+    var brandElement = document.getElementById('brand');
+
+    Homey.get('brand', function(err, brand) {
+      brandElement.value = brand || 'vaillant';
+    });
+
+    brandElement.addEventListener('change', function(element) {
+      var brand = element.target.value;
+      // Only non-secret keys are read here: a stored country means an account was configured.
+      Homey.get('sessionBrand', function(err, sessionBrand) {
+        Homey.get('country', function(err, country) {
+          Homey.set('brand', brand, function(setError) {
+            if (setError) {
+              return Homey.alert(setError.message || setError);
+            }
+            var sessionChanged = country && (sessionBrand || 'vaillant') !== brand;
+            document.getElementById('brand-warning').style.display = sessionChanged ? 'block' : 'none';
+          });
+        });
+      });
+    });
 
     Homey.get('loggingEnabled', function(err, loggingEnabled) {
       loggingEnabledElement.checked = loggingEnabled;
